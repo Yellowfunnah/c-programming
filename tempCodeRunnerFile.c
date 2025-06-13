@@ -13,7 +13,7 @@ void role2(){
 
 //Role 3
 void role3(){
-    printf("\nbetaaaa\n"); //betaa im going to work here 
+    printf("\nbetaaaa\n");
 }
 
 //Role 4
