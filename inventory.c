@@ -1,7 +1,5 @@
-// inventory.c (add this new function)
 #include "inventory.h"
 
-// Implementation of loadInventoryFromFile, saveInventoryToFile, addStockRecord, etc.
 #include <stdio.h>
 void runInventoryManagementMenu(InventoryItem **head_ptr) {
     int choice;
