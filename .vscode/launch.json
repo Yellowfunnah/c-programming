@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/afnan/Documents/GitHub/c-programming",
-      "program": "c:/Users/afnan/Documents/GitHub/c-programming/build/Debug/outDebug",
+      "cwd": "c:/Users/ejaz/Documents/GitHub/c-programming",
+      "program": "c:/Users/ejaz/Documents/GitHub/c-programming/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

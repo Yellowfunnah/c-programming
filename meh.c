@@ -1,5 +1,9 @@
 //assignment file  :)
 #include <stdio.h>
+#include "inventory.h" //Inventory header file
+
+
+#define INVENTORY_FILE "inventory.txt"// Defining the inventory file name
 
 //Role 1
 void role1(){
@@ -29,6 +33,9 @@ void role5(){
 // THHEE MENUU :))))))
 
 void RolesMenu(){
+    InventoryItem *inventoryHead = NULL;
+
+    inventoryHead = loadInventoryFromFile(INVENTORY_FILE);
 
     int choice;
 
@@ -48,6 +55,7 @@ void RolesMenu(){
     switch(choice) {
 
         case 1: role1();
+        runInventoryManagementMenu(&inventoryHead);
         break;
         
 
