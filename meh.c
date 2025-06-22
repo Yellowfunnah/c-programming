@@ -15,6 +15,7 @@ void role2(){
     inventoryMenu();
  }
 
+
 //Role 3
 void role3(){
     manageMenu();

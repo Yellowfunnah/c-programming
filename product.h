@@ -10,8 +10,8 @@ typedef struct{
 } product;
 
 void add_product();
-//void update_product();
-//void delete_product();
+void update_product();
+void delete_product();
 void view_product();
 void productMenu();
 
