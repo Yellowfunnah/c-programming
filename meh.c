@@ -1,10 +1,12 @@
 //assignment file  :)
 #include <stdio.h>
 #include "inventory.h" //Inventory header file
+#include "product.h"
+#include "category_supplier.h"
 
 //Role 1
 void role1(){
-    printf("\nAAAAAAAAAA\n");
+    productMenu();
 }
 
 //Role 2
@@ -15,7 +17,7 @@ void role2(){
 
 //Role 3
 void role3(){
-    printf("\nbetaaaa hellooooo\n"); //betaa im going to work here 
+    manageMenu();
 }
 
 //Role 4

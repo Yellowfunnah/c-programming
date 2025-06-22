@@ -182,8 +182,8 @@ void manageMenu() {
     } while (choice != 10);
 }
 
-int main() {
-    loadData();
-    manageMenu();
-    return 0;
-}
+//int main() {
+   // loadData();
+    //manageMenu();
+    //return 0;
+//}
