@@ -27,4 +27,18 @@ void add_product(){
     scanf("%lf", &new_product.price);
     while (getchar() != '\n');
 
+    if (new_product.price < 0){
+        printf("Invaild Price! price can't be Negative")
+        return;
+    }
+
+    printf("Enter Quantity: "):
+    scanf("%d", &new_product.quantity);
+    while (getchar() != '\n');
+
+    if (new_product.price < 0){
+        printf("Invaild Price! price can't be Negative")
+        return;
+    }
+
 }
