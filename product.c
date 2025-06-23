@@ -9,12 +9,27 @@
 
 #define FILENAME "products.txt"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "product.h"
+
+#define FILENAME "products.txt"
+
+int isValidName(const char* name) {
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalpha(name[i]) && name[i] != ' ') return 0;
+    }
+    return 1;
+}
+
 void add_product(){
 
     FILE *fp;
     product new_product;
     fp = fopen("products.txt", "a");
-    if (fp ==NULL){
+    if (fp == NULL){
         printf("Oops! Error opening file!\n");
         return;
     }
@@ -23,16 +38,35 @@ void add_product(){
     scanf("%s", new_product.productID);
     while (getchar() != '\n');
 
+    FILE *check_fp = fopen(FILENAME, "r");
+    product temp;
+    while (fscanf(check_fp, "%s %s %lf %d", temp.productID, temp.product_name, &temp.price, &temp.quantity) != EOF){
+        if (strcmp(temp.productID, new_product.productID) == 0){
+            printf("Product ID already exists! please enter a unique ID.\n");
+            fclose(check_fp);
+            fclose(fp);
+            return;
+        }
+    }
+    fclose(check_fp);
+
     printf("Enter Product Name: ");
     fgets(new_product.product_name, MAX_NAME_LENGTH, stdin);
-    new_product.product_name[strcspn(new_product.product_name, "\n")]=0;
+    new_product.product_name[strcspn(new_product.product_name, "\n")] = 0;
+
+    if (!isValidName(new_product.product_name)) {
+        printf("Invalid product name! Only letters and spaces allowed.\n");
+        fclose(fp);
+        return;
+    }
 
     printf("Enter Price: ");
     scanf("%lf", &new_product.price);
     while (getchar() != '\n');
 
-    if (new_product.price < 0){
-        printf("Invaild Price! price can't be Negative");
+    if (new_product.price <= 0 || new_product.price > 100000) {
+        printf("Invalid price! Must be between 0.01 and 100000.\n");
+        fclose(fp);
         return;
     }
 
@@ -40,11 +74,12 @@ void add_product(){
     scanf("%d", &new_product.quantity);
     while (getchar() != '\n');
 
-    if (new_product.quantity < 0){
-        printf("Invaild Quantity! Quantity can't be Negative");
+    if (new_product.quantity < 0 || new_product.quantity > 10000) {
+        printf("Invalid quantity! Must be between 0 and 10000.\n");
+        fclose(fp);
         return;
     }
-    
+
     fprintf(fp, "%s %s %.2lf %d\n",
         new_product.productID,
         new_product.product_name,
@@ -52,6 +87,8 @@ void add_product(){
         new_product.quantity);
     fclose(fp);
 }
+
+
 
 void view_products(){
 
@@ -118,7 +155,7 @@ void update_product(){
 }
 
 
-void  delete_priduct(){
+void  delete_product(){
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
 
@@ -155,7 +192,6 @@ else
 
 }
 
-
     void productMenu() {
         int choice;
 
@@ -177,16 +213,6 @@ else
                 case 5: printf("Returning to main menu...\n"); break; 
                 default: printf("invalid choice. please try again.\n");
             }
-        } while (choice != 3);
-
-
-
-
-
-
-
-
+        } while (choice != 5);
 
     }
-
-

@@ -1,3 +1,4 @@
 P001 Apple 1.50 100
 P002 Lemon 0.90 80
 P003 Milk 3.20 30
+P006 lime -1.#R 40

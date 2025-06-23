@@ -19,22 +19,22 @@ void addstock() {
 
     Inventory newItem;
 
-    printf("Enter product ID: ");
+    printf("Enter product ID: \n");
     fgets(newItem.productId, sizeof(newItem.productId), stdin);
     newItem.productId[strcspn(newItem.productId, "\n")] = 0;
 
-    printf("Enter product name: ");
+    printf("Enter product name: \n");
     fgets(newItem.productName, sizeof(newItem.productName), stdin);
     newItem.productName[strcspn(newItem.productName, "\n")] = 0;
 
-    printf("Enter quantity: ");
+    printf("Enter quantity: \n");
     if (scanf("%d", &newItem.quantity) != 1 || newItem.quantity < 0) {
         printf("Invalid input for quantity.\n");
         flushInput();
         return;
     }
 
-    printf("Enter threshold for low stock alert: ");
+    printf("Enter threshold for low stock alert: \n");
     if (scanf("%d", &newItem.threshold) != 1 || newItem.threshold < 0) {
         printf("Invalid input for threshold.\n");
         flushInput();
