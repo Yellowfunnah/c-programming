@@ -6,7 +6,7 @@
 
 //Role 1
 void role1(){
-    productMenu();
+    //productMenu();
 }
 
 //Role 2
@@ -18,7 +18,7 @@ void role2(){
 
 //Role 3
 void role3(){
-    manageMenu();
+    //manageMenu();
 }
 
 //Role 4
