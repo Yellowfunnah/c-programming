@@ -3,6 +3,10 @@
 #include <string.h>
 #include "product.h"
 
+// the update function doesn't loop back
+// no validation (enter your choice)+(inputing data) 
+// no password 
+
 #define FILENAME "products.txt"
 
 void add_product(){
