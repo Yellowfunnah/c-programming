@@ -5,7 +5,7 @@
 
 
 typedef struct InventoryItem {
-    int productId;
+    char productId[10];
     char productName[50];
     int quantity;
     int threshold;
