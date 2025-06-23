@@ -6,7 +6,7 @@
 
 //Role 1
 void role1(){
-    //productMenu();
+    roductMenu();
 }
 
 //Role 2
