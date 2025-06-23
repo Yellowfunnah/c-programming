@@ -1,7 +1,7 @@
-#include "inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "inventory.h"
 
 Inventory stock[MAX];
 int stockCount = 0;
@@ -21,7 +21,7 @@ void addstock() {
 
     printf("Enter product ID: ");
     fgets(newItem.productId, sizeof(newItem.productId), stdin);
-    newItem.productId[strcspn(newItem.productId, "\n")] = 0;  // remove newline
+    newItem.productId[strcspn(newItem.productId, "\n")] = 0;
 
     printf("Enter product name: ");
     fgets(newItem.productName, sizeof(newItem.productName), stdin);
@@ -41,27 +41,21 @@ void addstock() {
         return;
     }
 
-    flushInput();  // clean leftover \n after scanf
-
+    flushInput();
     stock[stockCount++] = newItem;
     printf("Stock added successfully.\n");
 }
 
-
-// Enhanced update stock function
 void updatestock() {
-    char id[20];
+    char id[10];
     int change;
     printf("Enter product ID to update stock: ");
-    if (scanf("%19s", &id) != 1) {
-        printf("Invalid input for product ID.\n");
-        flushInput();
-        return;
-    }
+    scanf("%9s", id);
+    flushInput();
 
     int found = 0;
     for (int i = 0; i < stockCount; i++) {
-        if (strcmp(stock[i].productId, id) == 0){
+        if (strcmp(stock[i].productId, id) == 0) {
             printf("Current quantity: %d\n", stock[i].quantity);
             printf("Enter change in quantity (positive to add, negative to remove): ");
             if (scanf("%d", &change) != 1) {
@@ -82,21 +76,24 @@ void updatestock() {
     if (!found) {
         printf("Product ID not found.\n");
     }
+    flushInput();
 }
 
 void removestock() {
-    char id[20];
+    char id[10];
     int found = 0;
     printf("Enter product ID to remove: ");
-    scanf("%19s", &id);
+    scanf("%9s", id);
+    flushInput();
+
     for (int i = 0; i < stockCount; i++) {
-        if (strcmp(stock[i].productId, id) == 0){
+        if (strcmp(stock[i].productId, id) == 0) {
             for (int j = i; j < stockCount - 1; j++) {
-                stock[j] = stock[j + 1]; // Shift items left
+                stock[j] = stock[j + 1];
             }
             stockCount--;
-            printf("Stock removed successfully.\n");
             found = 1;
+            printf("Product removed successfully.\n");
             break;
         }
     }
@@ -115,17 +112,15 @@ void viewstock() {
 }
 
 void lowstockAlert() {
-    printf("\nLow Stock Items:\n");
+    printf("\nLow Stock Alerts:\n");
     for (int i = 0; i < stockCount; i++) {
-        if (stock[i].quantity <= stock[i].threshold) {
-            printf("ID: %s, Name: %s, Quantity: %d\n",
-                   stock[i].productId, stock[i].productName,
-                   stock[i].quantity);
-        }    
+        if (stock[i].quantity < stock[i].threshold) {
+            printf("Product %s (%s) is low on stock. Quantity: %d\n",
+                   stock[i].productId, stock[i].productName, stock[i].quantity);
+        }
     }
 }
 
-// Enhanced save inventory function
 void saveInventory() {
     FILE *f = fopen("inventory.txt", "w");
     if (f == NULL) {
@@ -141,13 +136,12 @@ void saveInventory() {
     printf("Inventory successfully saved.\n");
 }
 
-// Corrected and enhanced load inventory function
 void loadInventory() {
     FILE *f = fopen("inventory.txt", "r");
     if (f != NULL) {
         stockCount = 0;
-        while (fscanf(f, "%19s %49s %d %d",
-                      &stock[stockCount].productId,
+        while (fscanf(f, "%9s %49s %d %d",
+                      stock[stockCount].productId,
                       stock[stockCount].productName,
                       &stock[stockCount].quantity,
                       &stock[stockCount].threshold) == 4) {
@@ -163,14 +157,22 @@ void loadInventory() {
     }
 }
 
-// General flush input buffer function for safety
-
 void inventoryMenu() {
     int choice;
     do {
-        printf("\n===== Inventory Management Menu =====\n");
-        printf("1. Add Stock\n2. Update Stock\n3. Remove Stock\n4. View Stock\n5. Low Stock Alert\n6. Save & Exit\nChoose: ");
+        printf("\nInventory Management Menu:\n");
+        printf("1. Add Stock\n");
+        printf("2. Update Stock\n");
+        printf("3. Remove Stock\n");
+        printf("4. View Stock\n");
+        printf("5. Low Stock Alert\n");
+        printf("6. Save Inventory\n");
+        printf("7. Load Inventory\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
+        flushInput();
+
         switch (choice) {
             case 1: addstock(); break;
             case 2: updatestock(); break;
@@ -178,7 +180,9 @@ void inventoryMenu() {
             case 4: viewstock(); break;
             case 5: lowstockAlert(); break;
             case 6: saveInventory(); break;
-            default: printf("Invalid option.\n");
+            case 7: loadInventory(); break;
+            case 0: printf("Exiting Inventory Menu.\n"); break;
+            default: printf("Invalid choice.\n"); break;
         }
-    } while (choice != 6);
+    } while (choice != 0);
 }
