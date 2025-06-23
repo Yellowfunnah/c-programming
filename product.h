@@ -7,6 +7,7 @@ typedef struct{
     char product_name[MAX_NAME_LENGTH];
     double price;
     int quantity;
+    char categoryId[10];
 } product;
 
 void add_product();
