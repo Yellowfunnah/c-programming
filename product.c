@@ -155,7 +155,7 @@ void update_product(){
 }
 
 
-void  delete_priduct(){
+void  delete_product(){
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
 
@@ -191,7 +191,6 @@ else
 
 
 }
-
 
     void productMenu() {
         int choice;
