@@ -6,40 +6,78 @@
 Inventory stock[MAX];
 int stockCount = 0;
 
-void addstock(){
+void flushInput() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+void addstock() {
     if (stockCount >= MAX) {
-        printf("stock storage is full.\n");
+        printf("Stock storage is full.\n");
         return;
     }
+
+    Inventory newItem;
+
     printf("Enter product ID: ");
-    scanf("%d", &stock[stockCount].productId);
+    fgets(newItem.productId, sizeof(newItem.productId), stdin);
+    newItem.productId[strcspn(newItem.productId, "\n")] = 0;  // remove newline
+
     printf("Enter product name: ");
-    scanf("%s", stock[stockCount].productName);
+    fgets(newItem.productName, sizeof(newItem.productName), stdin);
+    newItem.productName[strcspn(newItem.productName, "\n")] = 0;
+
     printf("Enter quantity: ");
-    scanf("%d", &stock[stockCount].quantity);
+    if (scanf("%d", &newItem.quantity) != 1 || newItem.quantity < 0) {
+        printf("Invalid input for quantity.\n");
+        flushInput();
+        return;
+    }
+
     printf("Enter threshold for low stock alert: ");
-    scanf("%d", &stock[stockCount].threshold);
-    stockCount++;
+    if (scanf("%d", &newItem.threshold) != 1 || newItem.threshold < 0) {
+        printf("Invalid input for threshold.\n");
+        flushInput();
+        return;
+    }
+
+    flushInput();  // clean leftover \n after scanf
+
+    stock[stockCount++] = newItem;
     printf("Stock added successfully.\n");
 }
 
+
+// Enhanced update stock function
 void updatestock() {
-    int id, change, found = 0;
+    char id[20];
+    int change;
     printf("Enter product ID to update stock: ");
-    scanf("%d", &id);
+    if (scanf("%19s", &id) != 1) {
+        printf("Invalid input for product ID.\n");
+        flushInput();
+        return;
+    }
+
+    int found = 0;
     for (int i = 0; i < stockCount; i++) {
-        if (stock[i].productId == id) {
+        if (strcmp(stock[i].productId, id) == 0){
             printf("Current quantity: %d\n", stock[i].quantity);
             printf("Enter change in quantity (positive to add, negative to remove): ");
-            scanf("%d", &change);
+            if (scanf("%d", &change) != 1) {
+                printf("Invalid input for quantity change.\n");
+                flushInput();
+                return;
+            }
+            if (stock[i].quantity + change < 0) {
+                printf("Error: Quantity cannot be negative.\n");
+                return;
+            }
             stock[i].quantity += change;
-            if (stock[i].quantity < 0) stock[i].quantity = 0; // Prevent negative stock
             printf("Stock updated successfully. New quantity: %d\n", stock[i].quantity);
             found = 1;
             break;
-
         }
-                
     }
     if (!found) {
         printf("Product ID not found.\n");
@@ -47,11 +85,12 @@ void updatestock() {
 }
 
 void removestock() {
-    int id, found = 0;
+    char id[20];
+    int found = 0;
     printf("Enter product ID to remove: ");
-    scanf("%d", &id);
+    scanf("%19s", &id);
     for (int i = 0; i < stockCount; i++) {
-        if (stock[i].productId == id) {
+        if (strcmp(stock[i].productId, id) == 0){
             for (int j = i; j < stockCount - 1; j++) {
                 stock[j] = stock[j + 1]; // Shift items left
             }
@@ -69,7 +108,7 @@ void removestock() {
 void viewstock() {
     printf("\nCurrent Inventory:\n");
     for (int i = 0; i < stockCount; i++) {
-        printf("ID: %d, Name: %s, Quantity: %d, Threshold: %d\n",
+        printf("ID: %s, Name: %s, Quantity: %d, Threshold: %d\n",
                stock[i].productId, stock[i].productName,
                stock[i].quantity, stock[i].threshold);
     }
@@ -79,36 +118,52 @@ void lowstockAlert() {
     printf("\nLow Stock Items:\n");
     for (int i = 0; i < stockCount; i++) {
         if (stock[i].quantity <= stock[i].threshold) {
-            printf("ID: %d, Name: %s, Quantity: %d\n",
+            printf("ID: %s, Name: %s, Quantity: %d\n",
                    stock[i].productId, stock[i].productName,
                    stock[i].quantity);
         }    
     }
 }
 
+// Enhanced save inventory function
 void saveInventory() {
     FILE *f = fopen("inventory.txt", "w");
+    if (f == NULL) {
+        printf("Failed to open inventory file for saving.\n");
+        return;
+    }
     for (int i = 0; i < stockCount; i++) {
-        fprintf(f,"%d %s %d %d\n",
+        fprintf(f, "%s %s %d %d\n",
                 stock[i].productId, stock[i].productName,
                 stock[i].quantity, stock[i].threshold);
-        }
+    }
     fclose(f);
+    printf("Inventory successfully saved.\n");
 }
 
+// Corrected and enhanced load inventory function
 void loadInventory() {
     FILE *f = fopen("inventory.txt", "r");
-    if (f == NULL) {
-        while (fscanf(f, "%d %s %d %d",
-               &stock[stockCount].productId,
-               stock[stockCount].productName,
-               &stock[stockCount].quantity,
-               &stock[stockCount].threshold) != EOF) {
+    if (f != NULL) {
+        stockCount = 0;
+        while (fscanf(f, "%19s %49s %d %d",
+                      &stock[stockCount].productId,
+                      stock[stockCount].productName,
+                      &stock[stockCount].quantity,
+                      &stock[stockCount].threshold) == 4) {
             stockCount++;
+            if (stockCount >= MAX) {
+                printf("Inventory loaded reached max capacity, some items may not be loaded.\n");
+                break;
+            }
         }
         fclose(f);
+    } else {
+        printf("Inventory file not found, starting with an empty inventory.\n");
     }
 }
+
+// General flush input buffer function for safety
 
 void inventoryMenu() {
     int choice;
