@@ -11,6 +11,22 @@ void flushInput() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+int isProductExists(const char* id) {
+    FILE* f = fopen("product.txt", "r");
+    if (!f) return 0;
+
+    char pid[10], name[50];
+    float price;
+    while (fscanf(f, "%s %s %f", pid, name, &price) == 3) {
+        if (strcmp(pid, id) == 0) {
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
 void addstock() {
     if (stockCount >= MAX) {
         printf("Stock storage is full.\n");
@@ -22,6 +38,11 @@ void addstock() {
     printf("Enter product ID: ");
     fgets(newItem.productId, sizeof(newItem.productId), stdin);
     newItem.productId[strcspn(newItem.productId, "\n")] = 0;
+
+    if (!isProductExists(newItem.productId)) {
+        printf("Product ID not found in product list.\n");
+        return;
+    }
 
     printf("Enter product name: ");
     fgets(newItem.productName, sizeof(newItem.productName), stdin);
