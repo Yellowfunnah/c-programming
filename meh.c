@@ -23,12 +23,12 @@ void role3(){
 
 //Role 4
 void role4(){
-    printf("\nWaiting for LATFIIAAAA\n");
+    printf("\nWaiting for Oroni\n");
 }
 
 //Role 5
 void role5(){
-    printf("\nWating for Oronniii\n");
+    printf("\nWating for jarin\n");
 }
 
 // THHEE MENUU :))))))
