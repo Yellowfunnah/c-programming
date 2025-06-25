@@ -3,16 +3,16 @@
 #include "inventory.h" //Inventory header file
 #include "product.h"
 #include "category_supplier.h"
-
+#include "transaction.h"  
 //Role 1
 void role1(){
-    roductMenu();
+    //productMenu();
 }
 
 //Role 2
 void role2(){
-    loadInventory();
-    inventoryMenu();
+    //loadInventory();
+    //inventoryMenu();
  }
 
 
@@ -23,7 +23,7 @@ void role3(){
 
 //Role 4
 void role4(){
-    printf("\nWaiting for LATFIIAAAA\n");
+    transactionMenu();
 }
 
 //Role 5
