@@ -3,7 +3,6 @@
 #include <string.h>
 #include "category_supplier.h"
 
-#define MAX 100
 Category categories[MAX];
 Supplier suppliers[MAX];
 int catCount = 0, suppCount = 0;
@@ -21,12 +20,12 @@ void addCategory() {
     printf("The category was successfully added!\n");
 }
 
-void updateCategory(char* id) {
+void updateCategory() {
     int id, found = 0;
     printf("Enter the category ID you need to update: ");
     scanf("%d", &id);
     for (int i = 0; i < catCount; i++) {
-        if (strcmp(categories[i].categoryId, id) == 0) {
+        if (categories[i].categoryId == id) {
             printf("Enter a new category name: ");
             scanf("%s", categories[i].categoryName);
             printf("The category has been successfully updated!\n");
@@ -42,8 +41,7 @@ void deleteCategory() {
     printf("Enter category ID to delete: ");
     scanf("%d", &id);
     for (int i = 0; i < catCount; i++) {
-        if if (strcmp(categories[i].categoryId, id) == 0)
- {
+        if (categories[i].categoryId == id) {
             for (int j = i; j < catCount - 1; j++) {
                 categories[j] = categories[j + 1];
             }
@@ -93,9 +91,7 @@ void updateSupplier() {
             break;
         }
     }
-    if (!found) {
-        printf("Supplier ID not found!\n");
-    }
+    if (!found) printf("Supplier ID not found!\n");
 }
 
 void deleteSupplier() {
@@ -149,6 +145,7 @@ void saveData() {
 void loadData() {
     FILE *cf = fopen("categories.txt", "r");
     FILE *sf = fopen("suppliers.txt", "r");
+    catCount = suppCount = 0; // Reset counters before loading
     if (cf != NULL) {
         while (fscanf(cf, "%d %s", &categories[catCount].categoryId, categories[catCount].categoryName) != EOF)
             catCount++;
@@ -181,10 +178,4 @@ void manageMenu() {
             default: printf("Invalid choice, please try again!\n");
         }
     } while (choice != 10);
-}
-
-int main() {
-    loadData();
-    manageMenu();
-    return 0;
 }

@@ -4,7 +4,7 @@
 #define MAX 100
 
 typedef struct {
-    int categoryId[10];
+    int categoryId;               // ✅ CORRECTED to single integer
     char categoryName[50];
 } Category;
 

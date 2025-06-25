@@ -22,7 +22,7 @@ void role2(){
 
 //Role 3
 void role3(){
-    //manageMenu();
+    manageMenu();
 }
 
 //Role 4
