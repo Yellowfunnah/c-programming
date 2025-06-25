@@ -2,16 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "file.h"
-
-// Define the product struct
-typedef struct Product {
-    int id;
-    char name[50];
-    int quantity;
-    float price;
-    struct Product* next; // Pointer to the next product
-} Product;
-
 #define PRODUCT_FILE "products.txt"
 
 // ========== Linked List Functions ==========

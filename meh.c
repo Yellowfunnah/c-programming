@@ -3,21 +3,20 @@
 #include "inventory.h" //Inventory header file
 #include "product.h"
 #include "category_supplier.h"
-<<<<<<< HEAD
 #include "transaction.h"  
-=======
 #include "file.h"
 
->>>>>>> 3de4b1524baa7bd71817af9c4196d0d18c06733e
+
+
 //Role 1
 void role1(){
-    //productMenu();
+    productMenu();
 }
 
 //Role 2
 void role2(){
-    //loadInventory();
-    //inventoryMenu();
+    loadInventory();
+    inventoryMenu();
  }
 
 
@@ -28,54 +27,14 @@ void role3(){
 
 //Role 4
 void role4(){
-<<<<<<< HEAD
     transactionMenu();
-=======
-    printf("\nWaiting for Oroni\n");
->>>>>>> 3de4b1524baa7bd71817af9c4196d0d18c06733e
 }
 
 //Role 5
 void role5(){
-    #include "file.h"  // Gives access to fileOperationsMenu()
-
-int main() {
-    int choice;
-    do {
-        printf("\n=== MAIN SYSTEM MENU ===\n");
-        printf("1. Product Management\n");
-        printf("2. Inventory Management\n");
-        printf("3. Category & Supplier\n");
-        printf("4. User & Transactions\n");
-        printf("5. File Operations (Role 5)\n");  // YOUR ROLE
-        printf("0. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                   manageMenu();
-                   break;
-            case 2:
-                   inventoryMenu();
-                   break;
-            case 3:
-                   productMenu();
-                   break;
-            case 4:
-                   RolesMenu();
-                   break;
-            case 5:
-                   
-                   
-                fileOperationsMenu();  // ← Calls your menu
-                break;
-            
-            // other roles...
-        }
-    } while (choice != 0);
-    return 0;
+    void fileOperationsMenu();
 }
+
 
 // THHEE MENUU :))))))
 

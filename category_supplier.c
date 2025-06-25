@@ -21,12 +21,12 @@ void addCategory() {
     printf("The category was successfully added!\n");
 }
 
-void updateCategory() {
+void updateCategory(char* id) {
     int id, found = 0;
     printf("Enter the category ID you need to update: ");
     scanf("%d", &id);
     for (int i = 0; i < catCount; i++) {
-        if (categories[i].categoryId == id) {
+        if (strcmp(categories[i].categoryId, id) == 0) {
             printf("Enter a new category name: ");
             scanf("%s", categories[i].categoryName);
             printf("The category has been successfully updated!\n");
@@ -42,7 +42,8 @@ void deleteCategory() {
     printf("Enter category ID to delete: ");
     scanf("%d", &id);
     for (int i = 0; i < catCount; i++) {
-        if (categories[i].categoryId == id) {
+        if if (strcmp(categories[i].categoryId, id) == 0)
+ {
             for (int j = i; j < catCount - 1; j++) {
                 categories[j] = categories[j + 1];
             }
@@ -182,8 +183,8 @@ void manageMenu() {
     } while (choice != 10);
 }
 
-//int main() {
-   // loadData();
-    //manageMenu();
-    //return 0;
-//}
+int main() {
+    loadData();
+    manageMenu();
+    return 0;
+}
