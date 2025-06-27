@@ -28,6 +28,9 @@ void updateSupplier();
 void deleteSupplier();
 void displaySuppliers();
 void filterSuppliersByCategory();
+void displayInventoryFromFile();
+void restockInventory();
+
 
 void saveData();
 void loadData();

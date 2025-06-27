@@ -131,6 +131,67 @@ void filterSuppliersByCategory() {
     }
 }
 
+void displayInventoryFromFile() {
+    FILE *file = fopen("inventory.txt", "r");
+    if (file == NULL) {
+        printf("Unable to open inventory.txt.\n");
+        return;
+    }
+
+    char productId[10], productName[50], status[10];
+    int quantity, threshold;
+
+    printf("\n===== Inventory Records =====\n");
+    printf("%-10s %-20s %-10s %-10s %-12s\n", "Product ID", "Product Name", "Qty", "Threshold", "Status");
+
+    while (fscanf(file, "%s %s %d %d %s", productId, productName, &quantity, &threshold, status) == 5) {
+        printf("%-10s %-20s %-10d %-10d %-12s\n", productId, productName, quantity, threshold, status);
+    }
+
+    fclose(file);
+}
+
+void restockInventory() {
+    char productId[10];
+    int addedQty, found = 0;
+
+    printf("Enter Product ID to restock: ");
+    scanf("%s", productId);
+
+    FILE *f = fopen("inventory.txt", "r");
+    FILE *temp = fopen("temp_inventory.txt", "w");
+
+    if (!f || !temp) {
+        printf("Error opening inventory file.\n");
+        return;
+    }
+
+    char pid[10], name[50], status[10];
+    int qty, threshold;
+
+    printf("Enter quantity to add: ");
+    scanf("%d", &addedQty);
+
+    while (fscanf(f, "%s %s %d %d %s", pid, name, &qty, &threshold, status) == 5) {
+        if (strcmp(pid, productId) == 0) {
+            qty += addedQty;
+            found = 1;
+        }
+        fprintf(temp, "%s %s %d %d %s\n", pid, name, qty, threshold, status);
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("inventory.txt");
+    rename("temp_inventory.txt", "inventory.txt");
+
+    if (found)
+        printf("✅ Quantity updated successfully for %s.\n", productId);
+    else
+        printf("❌ Product ID not found in inventory.\n");
+}
+
 void saveData() {
     FILE *cf = fopen("categories.txt", "w");
     FILE *sf = fopen("suppliers.txt", "w");
@@ -145,7 +206,7 @@ void saveData() {
 void loadData() {
     FILE *cf = fopen("categories.txt", "r");
     FILE *sf = fopen("suppliers.txt", "r");
-    catCount = suppCount = 0; // Reset counters before loading
+    catCount = suppCount = 0;
     if (cf != NULL) {
         while (fscanf(cf, "%d %s", &categories[catCount].categoryId, categories[catCount].categoryName) != EOF)
             catCount++;
@@ -162,7 +223,7 @@ void manageMenu() {
     int choice;
     do {
         printf("\n== Category and Supplier Management =====\n");
-        printf("1. Add Category\n2. Add Supplier\n3. Update Category\n4. Update Supplier\n5. Delete Category\n6. Delete Supplier\n7. View Categories\n8. View Suppliers\n9. Filter Suppliers by Category\n10. Save & Exit\nChoose option: ");
+        printf("1. Add Category\n2. Add Supplier\n3. Update Category\n4. Update Supplier\n5. Delete Category\n6. Delete Supplier\n7. View Categories\n8. View Suppliers\n9. Filter Suppliers by Category\n10. Show Inventory from File\n11. Restock Inventory (Add Quantity)\n12. Save & Exit\nChoose option: ");
         scanf("%d", &choice);
         switch (choice) {
             case 1: addCategory(); break;
@@ -174,8 +235,10 @@ void manageMenu() {
             case 7: displayCategories(); break;
             case 8: displaySuppliers(); break;
             case 9: filterSuppliersByCategory(); break;
-            case 10: saveData(); break;
+            case 10: displayInventoryFromFile(); break;
+            case 11: restockInventory(); break;
+            case 12: saveData(); break;
             default: printf("Invalid choice, please try again!\n");
         }
-    } while (choice != 10);
+    } while (choice != 12);
 }
