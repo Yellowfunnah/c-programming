@@ -29,7 +29,7 @@ int isProductExists(const char* id) {
 }
 
 int getProductDetails(const char* id, char* nameOut, float* priceOut) {
-    FILE* f = fopen("product.txt", "r");
+    FILE* f = fopen("products.txt", "r");
     if (!f) return 0;
 
     char pid[10], pname[50], categoryId[10];
@@ -69,7 +69,7 @@ void addstock() {
         printf("Product details could not be retrieved.\n");
         return;
     }
-    strcpy(newItem.productName, pname); // ✅ Auto-filled
+    strcpy(newItem.productName, pname); 
 
     printf("Enter quantity: ");
     if (scanf("%d", &newItem.quantity) != 1 || newItem.quantity < 0) {
