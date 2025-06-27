@@ -6,7 +6,6 @@ typedef struct{
     char productID[10];
     char product_name[MAX_NAME_LENGTH];
     double price;
-    int quantity;
     char categoryId[10];
 } product;
 

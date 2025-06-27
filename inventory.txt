@@ -1,1 +1,2 @@
-P001 Apple 50 50
+P001 Apple 50 10 live
+P002 Lemon 100 50 live
