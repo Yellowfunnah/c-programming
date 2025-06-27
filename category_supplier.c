@@ -13,7 +13,7 @@ void addCategory() {
         return;
     }
     printf("Enter category ID: ");
-    scanf("%d", &categories[catCount].categoryId);
+    scanf("%s", categories[catCount].categoryId);
     printf("Enter category name: ");
     scanf("%s", categories[catCount].categoryName);
     catCount++;
@@ -21,11 +21,12 @@ void addCategory() {
 }
 
 void updateCategory() {
-    int id, found = 0;
+    char id[10];
+    int found = 0;
     printf("Enter the category ID you need to update: ");
-    scanf("%d", &id);
+    scanf("%s", id);
     for (int i = 0; i < catCount; i++) {
-        if (categories[i].categoryId == id) {
+        if (strcmp(categories[i].categoryId, id) == 0) {
             printf("Enter a new category name: ");
             scanf("%s", categories[i].categoryName);
             printf("The category has been successfully updated!\n");
@@ -37,11 +38,12 @@ void updateCategory() {
 }
 
 void deleteCategory() {
-    int id, found = 0;
+    char id[10];
+    int found = 0;
     printf("Enter category ID to delete: ");
-    scanf("%d", &id);
+    scanf("%s", id);
     for (int i = 0; i < catCount; i++) {
-        if (categories[i].categoryId == id) {
+        if (strcmp(categories[i].categoryId, id) == 0) {
             for (int j = i; j < catCount - 1; j++) {
                 categories[j] = categories[j + 1];
             }
@@ -57,7 +59,7 @@ void deleteCategory() {
 void displayCategories() {
     printf("\nThe Categories:\n");
     for (int i = 0; i < catCount; i++) {
-        printf("ID: %d, Name: %s\n", categories[i].categoryId, categories[i].categoryName);
+        printf("ID: %s, Name: %s\n", categories[i].categoryId, categories[i].categoryName);
     }
 }
 
@@ -67,25 +69,26 @@ void addSupplier() {
         return;
     }
     printf("Enter supplier ID: ");
-    scanf("%d", &suppliers[suppCount].supplierId);
+    scanf("%s", suppliers[suppCount].supplierId);
     printf("Enter supplier name: ");
     scanf("%s", suppliers[suppCount].supplierName);
     printf("Enter category ID this supplier belongs to: ");
-    scanf("%d", &suppliers[suppCount].categoryId);
+    scanf("%s", suppliers[suppCount].categoryId);
     suppCount++;
     printf("Supplier added successfully.\n");
 }
 
 void updateSupplier() {
-    int id, found = 0;
+    char id[10];
+    int found = 0;
     printf("Enter the supplier ID you need to update: ");
-    scanf("%d", &id);
+    scanf("%s", id);
     for (int i = 0; i < suppCount; i++) {
-        if (suppliers[i].supplierId == id) {
+        if (strcmp(suppliers[i].supplierId, id) == 0) {
             printf("Enter a new supplier name: ");
             scanf("%s", suppliers[i].supplierName);
             printf("Enter new category ID: ");
-            scanf("%d", &suppliers[i].categoryId);
+            scanf("%s", suppliers[i].categoryId);
             printf("The supplier has been successfully updated!\n");
             found = 1;
             break;
@@ -95,11 +98,12 @@ void updateSupplier() {
 }
 
 void deleteSupplier() {
-    int id, found = 0;
+    char id[10];
+    int found = 0;
     printf("Enter supplier ID to delete: ");
-    scanf("%d", &id);
+    scanf("%s", id);
     for (int i = 0; i < suppCount; i++) {
-        if (suppliers[i].supplierId == id) {
+        if (strcmp(suppliers[i].supplierId, id) == 0) {
             for (int j = i; j < suppCount - 1; j++) {
                 suppliers[j] = suppliers[j + 1];
             }
@@ -115,18 +119,18 @@ void deleteSupplier() {
 void displaySuppliers() {
     printf("Total suppliers:\n");
     for (int i = 0; i < suppCount; i++) {
-        printf("ID: %d, Name: %s, Category ID: %d\n", suppliers[i].supplierId, suppliers[i].supplierName, suppliers[i].categoryId);
+        printf("ID: %s, Name: %s, Category ID: %s\n", suppliers[i].supplierId, suppliers[i].supplierName, suppliers[i].categoryId);
     }
 }
 
 void filterSuppliersByCategory() {
-    int catId;
+    char catId[10];
     printf("Enter category ID to filter suppliers: ");
-    scanf("%d", &catId);
-    printf("\nSuppliers under Category ID %d:\n", catId);
+    scanf("%s", catId);
+    printf("\nSuppliers under Category ID %s:\n", catId);
     for (int i = 0; i < suppCount; i++) {
-        if (suppliers[i].categoryId == catId) {
-            printf("ID: %d, Name: %s\n", suppliers[i].supplierId, suppliers[i].supplierName);
+        if (strcmp(suppliers[i].categoryId, catId) == 0) {
+            printf("ID: %s, Name: %s\n", suppliers[i].supplierId, suppliers[i].supplierName);
         }
     }
 }
@@ -152,7 +156,6 @@ void displayInventoryFromFile() {
 }
 
 void restockInventory() {
-    // Shows inventory before asking anything
     displayInventoryFromFile();
 
     char productId[10];
@@ -195,14 +198,13 @@ void restockInventory() {
         printf(" Product ID not found in inventory.\n");
 }
 
-
 void saveData() {
     FILE *cf = fopen("categories.txt", "w");
     FILE *sf = fopen("suppliers.txt", "w");
     for (int i = 0; i < catCount; i++)
-        fprintf(cf, "%d %s\n", categories[i].categoryId, categories[i].categoryName);
+        fprintf(cf, "%s %s\n", categories[i].categoryId, categories[i].categoryName);
     for (int i = 0; i < suppCount; i++)
-        fprintf(sf, "%d %s %d\n", suppliers[i].supplierId, suppliers[i].supplierName, suppliers[i].categoryId);
+        fprintf(sf, "%s %s %s\n", suppliers[i].supplierId, suppliers[i].supplierName, suppliers[i].categoryId);
     fclose(cf);
     fclose(sf);
 }
@@ -212,12 +214,12 @@ void loadData() {
     FILE *sf = fopen("suppliers.txt", "r");
     catCount = suppCount = 0;
     if (cf != NULL) {
-        while (fscanf(cf, "%d %s", &categories[catCount].categoryId, categories[catCount].categoryName) != EOF)
+        while (fscanf(cf, "%s %s", categories[catCount].categoryId, categories[catCount].categoryName) != EOF)
             catCount++;
         fclose(cf);
     }
     if (sf != NULL) {
-        while (fscanf(sf, "%d %s %d", &suppliers[suppCount].supplierId, suppliers[suppCount].supplierName, &suppliers[suppCount].categoryId) != EOF)
+        while (fscanf(sf, "%s %s %s", suppliers[suppCount].supplierId, suppliers[suppCount].supplierName, suppliers[suppCount].categoryId) != EOF)
             suppCount++;
         fclose(sf);
     }

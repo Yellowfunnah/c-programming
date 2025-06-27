@@ -4,15 +4,17 @@
 #define MAX 100
 
 typedef struct {
-    int categoryId;               // ✅ CORRECTED to single integer
+    char categoryId[10];     // ✅ MUST be a string
     char categoryName[50];
 } Category;
 
+
 typedef struct {
-    int supplierId;
+    char supplierId[10];       // instead of just char
     char supplierName[50];
-    int categoryId;
+    char categoryId[10];       // match Category's ID format
 } Supplier;
+
 
 extern Category categories[MAX];
 extern Supplier suppliers[MAX];
