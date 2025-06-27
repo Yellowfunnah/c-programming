@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
@@ -8,8 +9,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/ejaz/Documents/GitHub/c-programming",
-      "program": "c:/Users/ejaz/Documents/GitHub/c-programming/build/Debug/outDebug",
+      "cwd": "c:/Users/malik/Documents/GitHub/c-programming/meh.exe",
+      "program": "c:/Users/malik/Documents/GitHub/c-programming/build/Debug/outDebug.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
