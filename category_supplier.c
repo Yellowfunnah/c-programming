@@ -213,17 +213,25 @@ void loadData() {
     FILE *cf = fopen("categories.txt", "r");
     FILE *sf = fopen("suppliers.txt", "r");
     catCount = suppCount = 0;
+
     if (cf != NULL) {
-        while (fscanf(cf, "%s %s", categories[catCount].categoryId, categories[catCount].categoryName) != EOF)
+        printf("\nReading categories.txt...\n");
+        while (fscanf(cf, "%s %s", categories[catCount].categoryId, categories[catCount].categoryName) != EOF) {
+            printf("Loaded category: %s %s\n", categories[catCount].categoryId, categories[catCount].categoryName);
             catCount++;
+        }
         fclose(cf);
+    } else {
+        printf("❌ Failed to open categories.txt\n");
     }
+
     if (sf != NULL) {
         while (fscanf(sf, "%s %s %s", suppliers[suppCount].supplierId, suppliers[suppCount].supplierName, suppliers[suppCount].categoryId) != EOF)
             suppCount++;
         fclose(sf);
     }
 }
+
 
 void manageMenu() {
     int choice;

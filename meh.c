@@ -22,7 +22,8 @@ void role2(){
 
 //Role 3
 void role3(){
-    manageMenu();
+    loadData();        // ✅ This loads categories.txt and suppliers.txt
+    manageMenu();      // Then launches the menu
 }
 
 //Role 4
