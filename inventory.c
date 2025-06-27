@@ -12,13 +12,32 @@ void flushInput() {
 }
 
 int isProductExists(const char* id) {
+    FILE* f = fopen("products.txt", "r");
+    if (!f) return 0;
+
+    char pid[10], name[50], categoryId[10];
+    float price;
+
+    while (fscanf(f, "%s %s %f %s", pid, name, &price, categoryId) == 4) {
+    if (strcmp(pid, id) == 0) {
+        fclose(f);
+        return 1;
+    }
+}
+    fclose(f);
+    return 0;
+}
+
+int getProductDetails(const char* id, char* nameOut, float* priceOut) {
     FILE* f = fopen("product.txt", "r");
     if (!f) return 0;
 
-    char pid[10], name[50];
+    char pid[10], pname[50], categoryId[10];
     float price;
-    while (fscanf(f, "%s %s %f", pid, name, &price) == 3) {
+    while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
         if (strcmp(pid, id) == 0) {
+            strcpy(nameOut, pname);
+            *priceOut = price;
             fclose(f);
             return 1;
         }
@@ -44,9 +63,13 @@ void addstock() {
         return;
     }
 
-    printf("Enter product name: ");
-    fgets(newItem.productName, sizeof(newItem.productName), stdin);
-    newItem.productName[strcspn(newItem.productName, "\n")] = 0;
+    char pname[50];
+    float price;
+    if (!getProductDetails(newItem.productId, pname, &price)) {
+        printf("Product details could not be retrieved.\n");
+        return;
+    }
+    strcpy(newItem.productName, pname); // ✅ Auto-filled
 
     printf("Enter quantity: ");
     if (scanf("%d", &newItem.quantity) != 1 || newItem.quantity < 0) {
@@ -65,7 +88,7 @@ void addstock() {
 
     strcpy(newItem.status, "live");
     stock[stockCount++] = newItem;
-    printf("Stock added successfully.\n");
+    printf("Stock added successfully for %s.\n", newItem.productName);
 }
 
 void updatestock() {

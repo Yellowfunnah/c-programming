@@ -25,5 +25,6 @@ void reportInventory();
 void saveInventory();
 void loadInventory();
 void inventoryMenu();
-
+int isProductExists(const char* id);
+int getProductDetails(const char* id, char* nameOut, float* priceOut);
 #endif
