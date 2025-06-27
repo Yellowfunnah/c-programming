@@ -73,16 +73,7 @@ void add_product() {
         fclose(fp);
         return;
     }
-
-    // Quantity input
-    printf("Enter Quantity: ");
-    scanf("%d", &new_product.quantity);
-    while (getchar() != '\n');
-    if (new_product.quantity < 0 || new_product.quantity > 10000) {
-        printf("Invalid quantity! Must be between 0 and 10000.\n");
-        fclose(fp);
-        return;
-    }
+    
 
     // Category ID input + validation
     printf("Enter Category ID: ");
