@@ -1,1 +1,10 @@
-C001 AHMED
+C001 fruits
+C002 Vegetables
+C003 Beverages
+C004 Snacks
+C005 Dairy
+C006 Frozen
+C007 Bakery
+C008 Cleaning
+C009 PersonalCare
+C010 Stationery
