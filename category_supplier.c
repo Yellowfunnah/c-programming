@@ -187,9 +187,9 @@ void restockInventory() {
     rename("temp_inventory.txt", "inventory.txt");
 
     if (found)
-        printf("✅ Quantity updated successfully for %s.\n", productId);
+        printf(" Quantity updated successfully for %s.\n", productId);
     else
-        printf("❌ Product ID not found in inventory.\n");
+        printf(" Product ID not found in inventory.\n");
 }
 
 void saveData() {
