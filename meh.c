@@ -32,7 +32,7 @@ void role4(){
 
 //Role 5
 void role5(){
-    //fileOperationsMenu();
+    fileOperationsMenu();
 }
 
 

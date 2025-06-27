@@ -140,8 +140,8 @@ Product* deleteProductById(Product* head, int id) {
 
     printf("Product ID not found.\n");
     return head;
-    
-void fileOperationsMenu();
+}   
+void fileOperationsMenu(){
      Product* list = NULL;
     int choice;
 

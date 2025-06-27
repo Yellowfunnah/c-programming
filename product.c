@@ -1,17 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "product.h"
-
-// the update function doesn't loop back
-// no validation (enter your choice)+(inputing data) 
-// no password 
-
-#define FILENAME "products.txt"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
 #include "product.h"
 
@@ -28,7 +17,7 @@ void add_product() {
     FILE *fp;
     product new_product;
 
-    fp = fopen("products.txt", "a");
+    fp = fopen(FILENAME, "a");
     if (fp == NULL) {
         printf("Oops! Error opening file!\n");
         return;
@@ -43,7 +32,7 @@ void add_product() {
 
     FILE *check_fp = fopen(FILENAME, "r");
     product temp;
-    while (fscanf(check_fp, "%s %s %lf %d %s", temp.productID, temp.product_name, &temp.price, &temp.quantity, temp.categoryId) != EOF) {
+    while (fscanf(check_fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
         if (strcmp(temp.productID, new_product.productID) == 0) {
             printf("Product ID already exists! Please enter a unique ID.\n");
             fclose(check_fp);
@@ -73,12 +62,11 @@ void add_product() {
         fclose(fp);
         return;
     }
-    
 
     // Category ID input + validation
     printf("Enter Category ID: ");
     scanf("%s", new_product.categoryId);
-    FILE *cat_fp = fopen("category.txt", "r");
+    FILE *cat_fp = fopen("categories.txt", "r");
     int catFound = 0;
     char catID[10], catName[50];
     if (cat_fp == NULL) {
@@ -100,70 +88,61 @@ void add_product() {
     }
 
     // Save to file
-    fprintf(fp, "%s %s %.2lf %d %s\n",
+    fprintf(fp, "%s %s %.2lf %s\n",
             new_product.productID,
             new_product.product_name,
             new_product.price,
-            new_product.quantity,
             new_product.categoryId);
 
     fclose(fp);
     printf("Product added successfully!\n");
 }
 
-
-
-
-void view_products(){
-
+void view_products() {
     FILE *fp;
     product view;
-    
-    fp = fopen(FILENAME, "r");
 
+    fp = fopen(FILENAME, "r");
     if (fp == NULL) {
         printf("Oops! The product can't be found.\n");
         return;
     }
 
     printf("~~~~ All The Products ~~~~\n");
-    printf("%-10s %-25s %-10s %-10s\n", "ID", "Name", "Price", "Qty");
+    printf("%-10s %-25s %-10s %-10s\n", "ID", "Name", "Price", "Category");
     printf("\n");
-    while (fscanf(fp, "%s %s %lf %d", view.productID, view.product_name, &view.price, &view.quantity) != EOF) {
-                printf("%-10s %-25s RM%-9.2lf %-10d\n", view.productID, view.product_name, view.price, view.quantity);
+    while (fscanf(fp, "%s %s %lf %s", view.productID, view.product_name, &view.price, view.categoryId) != EOF) {
+        printf("%-10s %-25s RM%-9.2lf %-10s\n", view.productID, view.product_name, view.price, view.categoryId);
     }
     fclose(fp);
-
 }
 
-
-
-void update_product(){
+void update_product() {
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
     product temp;
     char target_id[20];
     int found = 0;
 
-    if (fp == NULL || temp_fp == NULL){
+    if (fp == NULL || temp_fp == NULL) {
         printf("Error Opening file.\n");
         return;
     }
 
-    printf("Enter Product Id to Update: ");
+    printf("Enter Product ID to Update: ");
     scanf("%s", target_id);
 
-    while (fscanf(fp,"%s %s%lf %d", temp.productID, temp.product_name, &temp.price, &temp.quantity) !=EOF ){
-        if(strcmp(temp.productID, target_id)==0){
+    while (fscanf(fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
+        if (strcmp(temp.productID, target_id) == 0) {
             printf("Enter new name: ");
             scanf("%s", temp.product_name);
             printf("Enter new price: ");
             scanf("%lf", &temp.price);
-            printf("Enter new quantity; ");
-            scanf("%d", &temp.quantity);
+            printf("Enter new Category ID: ");
+            scanf("%s", temp.categoryId);
             found = 1;
         }
-        fprintf(temp_fp,"%s %s %.2lf %d\n",temp.productID, temp.product_name, temp.price, temp.quantity);
+        fprintf(temp_fp, "%s %s %.2lf %s\n", temp.productID, temp.product_name, temp.price, temp.categoryId);
     }
     fclose(fp);
     fclose(temp_fp);
@@ -175,68 +154,61 @@ void update_product(){
         printf("Product updated successfully!\n");
     else
         printf("Product ID not found.\n");
-
 }
 
-
-void  delete_product(){
+void delete_product() {
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
-
     product temp;
     char target_id[20];
     int found = 0;
 
-    if(fp == NULL || temp_fp == NULL){
-        printf("Error Opening file. \n");
+    if (fp == NULL || temp_fp == NULL) {
+        printf("Error Opening file.\n");
         return;
     }
+
     printf("Enter Product ID to delete: ");
     scanf("%s", target_id);
 
-    while (fscanf(fp, "%s %s %lf %d", temp.productID, temp.product_name, &temp.price, &temp.quantity) !=EOF){
-
-        if (strcmp(temp.productID, target_id) ==0) {
+    while (fscanf(fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
+        if (strcmp(temp.productID, target_id) == 0) {
             found = 1;
             continue;
         }
-        fprintf(temp_fp, "%s %s %2lf %d\n", temp.productID, temp.product_name, temp.price, temp.quantity);
-
+        fprintf(temp_fp, "%s %s %.2lf %s\n", temp.productID, temp.product_name, temp.price, temp.categoryId);
     }
-fclose(fp);
-fclose(temp_fp);
-remove(FILENAME);
-rename("temp.txt", FILENAME);
+    fclose(fp);
+    fclose(temp_fp);
+    remove(FILENAME);
+    rename("temp.txt", FILENAME);
 
-if (found)
-    printf("Product deleted successfully!!\n");
-else
-    printf("Product ID not found.\n");
-
-
+    if (found)
+        printf("Product deleted successfully!!\n");
+    else
+        printf("Product ID not found.\n");
 }
 
-    void productMenu() {
-        int choice;
+void productMenu() {
+    int choice;
 
-        do{
-            printf("\n~~~~ Product Management ~~~~\n");
-            printf("1. Add Product\n");
-            printf("2. View All Products\n");
-            printf("3. Update Product\n");
-            printf("4. Delete Product\n");
-            printf("5. Exit to main\n");
-            printf("Enter your choice: ");
-            scanf("%d", &choice);
+    do {
+        printf("\n~~~~ Product Management ~~~~\n");
+        printf("1. Add Product\n");
+        printf("2. View All Products\n");
+        printf("3. Update Product\n");
+        printf("4. Delete Product\n");
+        printf("5. Exit to main\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-            switch (choice){
-                case 1: add_product(); break;
-                case 2: view_products(); break;
-                case 3: update_product(); break;
-                case 4: delete_product(); break;
-                case 5: printf("Returning to main menu...\n"); break; 
-                default: printf("invalid choice. please try again.\n");
-            }
-        } while (choice != 5);
-
-    }
+        switch (choice) {
+            case 1: add_product(); break;
+            case 2: view_products(); break;
+            case 3: update_product(); break;
+            case 4: delete_product(); break;
+            case 5: printf("Returning to main menu...\n"); break;
+            default: printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 5);
+}
