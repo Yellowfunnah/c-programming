@@ -115,7 +115,7 @@ void updateProductQuantity(Product* head, int id, int newQty) {
         }
         current = current->next;
     }
-    printf("❌ Product ID not found.\n");
+    printf("Product ID not found.\n");
 }
 
 // Delete a product by ID
@@ -131,14 +131,14 @@ Product* deleteProductById(Product* head, int id) {
 
             free(current);
             writeAllProductsToFile(head);
-            printf("✅ Product with ID %d deleted.\n", id);
+            printf("Product with ID %d deleted.\n", id);
             return head;
         }
         prev = current;
         current = current->next;
     }
 
-    printf("❌ Product ID not found.\n");
+    printf("Product ID not found.\n");
     return head;
     
 void fileOperationsMenu();
@@ -172,7 +172,7 @@ void fileOperationsMenu();
             Product* newProduct = createProduct(id, name, qty, price);
             saveProductToFile(newProduct);
             free(newProduct);
-            printf("✅ Product added successfully.\n");
+            printf("Product added successfully.\n");
 
         } else if (choice == 2) {
             list = loadProductsFromFile();
@@ -198,7 +198,7 @@ void fileOperationsMenu();
             freeProductList(list);
 
         } else if (choice != 0) {
-            printf("❌ Invalid choice.\n");
+            printf("Invalid choice.\n");
         }
 
     } while (choice != 0);
