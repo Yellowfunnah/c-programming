@@ -7,4 +7,4 @@ C006 Frozen
 C007 Bakery
 C008 Cleaning
 C009 PersonalCare
-C010 Stationery
+C010 Stationer
