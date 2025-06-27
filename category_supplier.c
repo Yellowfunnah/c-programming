@@ -152,6 +152,9 @@ void displayInventoryFromFile() {
 }
 
 void restockInventory() {
+    // Shows inventory before asking anything
+    displayInventoryFromFile();
+
     char productId[10];
     int addedQty, found = 0;
 
@@ -191,6 +194,7 @@ void restockInventory() {
     else
         printf(" Product ID not found in inventory.\n");
 }
+
 
 void saveData() {
     FILE *cf = fopen("categories.txt", "w");
