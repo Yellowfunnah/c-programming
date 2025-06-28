@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "file.h"
+#include "file.h" 
 #define PRODUCT_FILE "products.txt"
 
 // ========== Linked List Functions ==========
@@ -110,7 +110,7 @@ void updateProductQuantity(Product* head, int id, int newQty) {
         if (current->id == id) {
             current->quantity = newQty;
             writeAllProductsToFile(head);
-            printf("✅ Quantity updated for product ID %d.\n", id);
+            printf("Quantity updated for product ID %d.\n", id);
             return;
         }
         current = current->next;
@@ -140,9 +140,12 @@ Product* deleteProductById(Product* head, int id) {
 
     printf("Product ID not found.\n");
     return head;
-}   
-void fileOperationsMenu(){
-     Product* list = NULL;
+} 
+
+
+// ========== FILE OPERATIONS MENU (NOW OUTSIDE deleteProductById) ==========
+void fileOperationsMenu() {
+    Product* list = NULL;
     int choice;
 
     do {
@@ -163,7 +166,7 @@ void fileOperationsMenu(){
             printf("Enter product ID: ");
             scanf("%d", &id);
             printf("Enter product name: ");
-            scanf(" %[^\n]", name);
+            scanf(" %[^\n]", name); // Note: space before % to consume newline from previous scanf
             printf("Enter quantity: ");
             scanf("%d", &qty);
             printf("Enter price: ");
@@ -171,14 +174,14 @@ void fileOperationsMenu(){
 
             Product* newProduct = createProduct(id, name, qty, price);
             saveProductToFile(newProduct);
-            free(newProduct);
+            free(newProduct); // Free the allocated product node
             printf("Product added successfully.\n");
 
         } else if (choice == 2) {
             list = loadProductsFromFile();
             displayAllProducts(list);
-            freeProductList(list);
-
+            freeProductList(list); // Free the list after use
+            list = NULL; // Best practice: set to NULL after freeing
         } else if (choice == 3) {
             int id, newQty;
             printf("Enter product ID to update: ");
@@ -188,15 +191,15 @@ void fileOperationsMenu(){
             list = loadProductsFromFile();
             updateProductQuantity(list, id, newQty);
             freeProductList(list);
-
+            list = NULL;
         } else if (choice == 4) {
             int id;
             printf("Enter product ID to delete: ");
             scanf("%d", &id);
             list = loadProductsFromFile();
-            list = deleteProductById(list, id);
-            freeProductList(list);
-
+            list = deleteProductById(list, id); // deleteProductById returns the new head
+            freeProductList(list); // Free the (potentially modified) list
+            list = NULL;
         } else if (choice != 0) {
             printf("Invalid choice.\n");
         }

@@ -8,9 +8,9 @@ User users[MAX_TRANSACTIONS];
 int transactionCount = 0;
 int userCount = 0;
 
-// Utility
 
 // User functions
+// Adds a new user by prompting for user ID and username, then stores it in the users array if the maximum limit hasn't been reached.
 void addUser() {
     if (userCount >= MAX_TRANSACTIONS) {
         printf("User limit reached.\n");
@@ -24,6 +24,7 @@ void addUser() {
     printf("User added successfully!\n");
 }
 
+// Loads user data from file and displays all registered users with their IDs and usernames if any exist.
 void viewUsers() {
     loadUserData();  // Ensure list is loaded from file
     if (userCount == 0) {
@@ -36,9 +37,10 @@ void viewUsers() {
     }
 }
 
+// Searches for a user by ID, and if found, updates their username and saves the changes to the file; otherwise, displays a "User not found" message.
 void updateUser() {
     viewUsers();
-    loadUserData();  // Always reload
+    loadUserData();  
 
     if (userCount == 0) {
         printf("No users found to update.\n");
@@ -70,6 +72,7 @@ void updateUser() {
     }
 }
 
+// Deletes a user from the users array by matching the entered User ID, shifts remaining users to fill the gap, and updates the user count; displays a message if the user is not found.
 void deleteUser() {
     char id[10];
     int found = 0;
@@ -90,6 +93,7 @@ void deleteUser() {
 }
 
 // Transaction functions
+// Records a new transaction by prompting for transaction details, checks and updates inventory if sufficient stock is available, retrieves unit price from products.txt, calculates total price, updates inventory.txt accordingly, and stores the transaction in memory.
 void addTransaction() {
     if (transactionCount >= MAX_TRANSACTIONS) {
         printf("Transaction limit reached.\n");
@@ -184,6 +188,7 @@ void addTransaction() {
     printf("Total Price: RM%.2lf | Inventory updated for product %s.\n", purchaseQty * unitPrice, productId);
 }
 
+// Displays all recorded transactions with transaction ID, user ID, product ID, quantity, total price, and date, or notifies if no transactions exist.
 void viewTransactions() {
     if (transactionCount == 0) {
         printf("No transactions recorded yet.\n");
@@ -201,6 +206,7 @@ void viewTransactions() {
     }
 }
 
+// Deletes a transaction by matching the entered Transaction ID, shifts remaining transactions to maintain the array structure, updates the transaction count, and notifies the user whether the deletion was successful or not.
 void deleteTransaction() {
     char id[10];
     int found = 0;
@@ -220,7 +226,7 @@ void deleteTransaction() {
     if (!found) printf("Transaction ID not found.\n");
 }
 
-
+// Generates a filtered transaction report based on either User ID or Product ID input by the user, displays matching transactions if found, and handles invalid options or cases where no transactions match the input.
 void reportTransactions() {
     int option;
     char input[20];
@@ -272,6 +278,7 @@ void reportTransactions() {
 }
 
 // File I/O
+// Saves all current user data from the users array into users.txt by overwriting the file with each user's ID and username.
 void saveUserData() {
     FILE *f = fopen("users.txt", "w");
     for (int i = 0; i < userCount; i++) {
@@ -280,6 +287,7 @@ void saveUserData() {
     fclose(f);
 }
 
+// Loads user data from users.txt into the users array by reading each user's ID and username, and updates the user count accordingly.
 void loadUserData() {
     userCount = 0;
     FILE *f = fopen("users.txt", "r");
@@ -290,6 +298,7 @@ void loadUserData() {
     }
 }
 
+// Saves all recorded transactions to transactions.txt by writing each transaction's ID, user ID, product ID, quantity, total price, and date.
 void saveTransactionData() {
     FILE *f = fopen("transactions.txt", "w");
     for (int i = 0; i < transactionCount; i++) {
@@ -304,6 +313,7 @@ void saveTransactionData() {
     fclose(f);
 }
 
+// Loads transaction data from transactions.txt into the transactions array by reading each transaction’s details and increments the transaction count accordingly.
 void loadTransactionData() {
     FILE *f = fopen("transactions.txt", "r");
     if (f != NULL) {
