@@ -33,7 +33,7 @@ P032 Croissant 100 50 live
 P033 Donut 100 50 live
 P034 Muffin 100 50 live
 P035 Bagel 100 50 live
-P036 Dish_Soap 100 50 live
+P036 Dish_Soap 99 50 live
 P037 Laundry_Detergent 100 50 live
 P038 Glass_Cleaner 100 50 live
 P039 Bleach 100 50 live
