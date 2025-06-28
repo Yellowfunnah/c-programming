@@ -3,6 +3,7 @@
 
 #define MAX_TRANSACTIONS 100
 
+// Transaction structure
 typedef struct {
     char transactionID[10];
     char userID[10];
@@ -12,30 +13,32 @@ typedef struct {
     char date[20];
 } Transaction;
 
+// User structure
 typedef struct {
     char userID[10];
     char username[50];
 } User;
 
-extern Transaction transactions[MAX_TRANSACTIONS];
-extern User users[MAX_TRANSACTIONS];
-extern int transactionCount;
-extern int userCount;
+// Function declarations
 
+// User management
+void transactionMenu();
 void addUser();
 void viewUsers();
 void updateUser();
 void deleteUser();
+void saveUserData();
+void loadUserData();
 
+// Transaction management
 void addTransaction();
 void viewTransactions();
 void deleteTransaction();
-
-void loadUserData();
-void saveUserData();
-void loadTransactionData();
 void saveTransactionData();
+void loadTransactionData();
+void reportTransactions();  
 
-void transactionMenu();
+// Utility
+void flushInput();
 
 #endif

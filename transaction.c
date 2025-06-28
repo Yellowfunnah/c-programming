@@ -8,8 +8,13 @@ User users[MAX_TRANSACTIONS];
 int transactionCount = 0;
 int userCount = 0;
 
-// User functions
+// Utility
+void flushInput() {
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
+}
 
+// User functions
 void addUser() {
     if (userCount >= MAX_TRANSACTIONS) {
         printf("User limit reached.\n");
@@ -24,6 +29,11 @@ void addUser() {
 }
 
 void viewUsers() {
+    loadUserData();  // Ensure list is loaded from file
+    if (userCount == 0) {
+        printf("No users registered yet.\n");
+        return;
+    }
     printf("\nRegistered Users:\n");
     for (int i = 0; i < userCount; i++) {
         printf("ID: %s, Name: %s\n", users[i].userID, users[i].username);
@@ -31,20 +41,36 @@ void viewUsers() {
 }
 
 void updateUser() {
+    loadUserData();  // Always reload
+
+    if (userCount == 0) {
+        printf("No users found to update.\n");
+        return;
+    }
+
+    printf("\n--- Existing Users ---\n");
+    viewUsers();
+
     char id[10];
     int found = 0;
-    printf("Enter User ID to update: ");
+    printf("\nEnter User ID to update: ");
     scanf("%s", id);
+
     for (int i = 0; i < userCount; i++) {
         if (strcmp(users[i].userID, id) == 0) {
             printf("Enter new username: ");
             scanf("%s", users[i].username);
-            printf("User updated successfully!\n");
             found = 1;
             break;
         }
     }
-    if (!found) printf("User not found.\n");
+
+    if (found) {
+        saveUserData();
+        printf("User updated successfully!\n");
+    } else {
+        printf("User not found.\n");
+    }
 }
 
 void deleteUser() {
@@ -67,7 +93,6 @@ void deleteUser() {
 }
 
 // Transaction functions
-
 void addTransaction() {
     if (transactionCount >= MAX_TRANSACTIONS) {
         printf("Transaction limit reached.\n");
@@ -91,6 +116,7 @@ void addTransaction() {
 
     FILE *inv = fopen("inventory.txt", "r");
     FILE *temp = fopen("temp_inventory.txt", "w");
+
     if (!inv || !temp) {
         printf("Error opening inventory file.\n");
         return;
@@ -103,6 +129,7 @@ void addTransaction() {
     while (fscanf(inv, "%s %s %d %d %s", pid, pname, &qty, &threshold, status) == 5) {
         if (strcmp(pid, productId) == 0) {
             found = 1;
+
             if (qty < purchaseQty) {
                 printf("Insufficient stock for %s. Available: %d\n", pname, qty);
                 fclose(inv);
@@ -110,43 +137,61 @@ void addTransaction() {
                 remove("temp_inventory.txt");
                 return;
             }
+
             qty -= purchaseQty;
 
             FILE *pf = fopen("products.txt", "r");
             if (pf != NULL) {
                 char prodID[10], prodName[100], catID[10];
                 double price;
-                while (fscanf(pf, "%s %s %lf %s", prodID, prodName, &price, catID) != EOF) {
+
+                while (fscanf(pf, "%s %s %lf %s", prodID, prodName, &price, catID) == 4) {
                     if (strcmp(prodID, productId) == 0) {
                         unitPrice = price;
                         break;
                     }
                 }
+
                 fclose(pf);
+            } else {
+                printf("Error opening products.txt\n");
+                fclose(inv);
+                fclose(temp);
+                remove("temp_inventory.txt");
+                return;
             }
         }
+
         fprintf(temp, "%s %s %d %d %s\n", pid, pname, qty, threshold, status);
     }
 
     fclose(inv);
     fclose(temp);
-    remove("inventory.txt");
-    rename("temp_inventory.txt", "inventory.txt");
 
     if (!found) {
         printf("Product ID not found in inventory.\n");
+        remove("temp_inventory.txt");
         return;
     }
+
+    remove("inventory.txt");
+    rename("temp_inventory.txt", "inventory.txt");
 
     strcpy(transactions[transactionCount].productID, productId);
     transactions[transactionCount].quantity = purchaseQty;
     transactions[transactionCount].totalPrice = purchaseQty * unitPrice;
 
     transactionCount++;
-    printf("Transaction recorded. RM%.2lf deducted. Inventory updated.\n", purchaseQty * unitPrice);
+
+    printf("Transaction recorded successfully!\n");
+    printf("Total Price: RM%.2lf | Inventory updated for product %s.\n", purchaseQty * unitPrice, productId);
 }
 
 void viewTransactions() {
+    if (transactionCount == 0) {
+        printf("No transactions recorded yet.\n");
+        return;
+    }
     printf("\nTransactions:\n");
     for (int i = 0; i < transactionCount; i++) {
         printf("TID: %s, User: %s, Product: %s, Qty: %d, Total: RM%.2lf, Date: %s\n",
@@ -178,8 +223,58 @@ void deleteTransaction() {
     if (!found) printf("Transaction ID not found.\n");
 }
 
-// File I/O
 
+void reportTransactions() {
+    int option;
+    char input[20];
+    printf("\nTransaction Report Options:\n1. By User ID\n2. By Product ID\nChoose option: ");
+    scanf("%d", &option);
+    flushInput();
+
+    if (option == 1) {
+        printf("Enter User ID: ");
+        fgets(input, sizeof(input), stdin);
+        input[strcspn(input, "\n")] = 0;
+
+        printf("\nTransactions for User ID: %s\n", input);
+        int found = 0;
+        for (int i = 0; i < transactionCount; i++) {
+            if (strcmp(transactions[i].userID, input) == 0) {
+                printf("TID: %s, Product: %s, Qty: %d, Total: RM%.2lf, Date: %s\n",
+                       transactions[i].transactionID,
+                       transactions[i].productID,
+                       transactions[i].quantity,
+                       transactions[i].totalPrice,
+                       transactions[i].date);
+                found = 1;
+            }
+        }
+        if (!found) printf("No transactions found for this user.\n");
+    } else if (option == 2) {
+        printf("Enter Product ID: ");
+        fgets(input, sizeof(input), stdin);
+        input[strcspn(input, "\n")] = 0;
+
+        printf("\nTransactions for Product ID: %s\n", input);
+        int found = 0;
+        for (int i = 0; i < transactionCount; i++) {
+            if (strcmp(transactions[i].productID, input) == 0) {
+                printf("TID: %s, User: %s, Qty: %d, Total: RM%.2lf, Date: %s\n",
+                       transactions[i].transactionID,
+                       transactions[i].userID,
+                       transactions[i].quantity,
+                       transactions[i].totalPrice,
+                       transactions[i].date);
+                found = 1;
+            }
+        }
+        if (!found) printf("No transactions found for this product.\n");
+    } else {
+        printf("Invalid option.\n");
+    }
+}
+
+// File I/O
 void saveUserData() {
     FILE *f = fopen("users.txt", "w");
     for (int i = 0; i < userCount; i++) {
@@ -189,6 +284,7 @@ void saveUserData() {
 }
 
 void loadUserData() {
+    userCount = 0;
     FILE *f = fopen("users.txt", "r");
     if (f != NULL) {
         while (fscanf(f, "%s %s", users[userCount].userID, users[userCount].username) != EOF)
@@ -226,6 +322,7 @@ void loadTransactionData() {
     }
 }
 
+// Main menu
 void transactionMenu() {
     loadUserData();
     loadTransactionData();
@@ -235,7 +332,7 @@ void transactionMenu() {
         printf("\n=== User & Transaction Management ===\n");
         printf("1. Add User\n2. View Users\n3. Update User\n4. Delete User\n");
         printf("5. Add Transaction\n6. View Transactions\n7. Delete Transaction\n");
-        printf("8. Save & Exit\nChoose option: ");
+        printf("8. Report Transactions\n9. Save & Exit\nChoose option: ");
         scanf("%d", &choice);
 
         switch (choice) {
@@ -246,7 +343,8 @@ void transactionMenu() {
             case 5: addTransaction(); break;
             case 6: viewTransactions(); break;
             case 7: deleteTransaction(); break;
-            case 8:
+            case 8: reportTransactions(); break;
+            case 9:
                 saveUserData();
                 saveTransactionData();
                 printf("Data saved.\n");
@@ -254,5 +352,5 @@ void transactionMenu() {
             default: printf("Invalid choice.\n");
         }
 
-    } while (choice != 8);
+    } while (choice != 9);
 }
