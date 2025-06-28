@@ -172,6 +172,7 @@ void updatestock() {
 // Manually update the status of a product in the inventory
 void updatestatus() {
     char id[10];
+    flushInput(); 
     printf("Enter product ID to update status: ");
     scanf("%s", id);
 

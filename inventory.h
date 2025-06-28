@@ -9,7 +9,7 @@ typedef struct InventoryItem {
     char productName[50];
     int quantity;
     int threshold;
-    char status[10];
+    char status[15];
 } Inventory;
 
 // Global variables
