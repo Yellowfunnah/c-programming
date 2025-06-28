@@ -281,7 +281,7 @@ void inventoryMenu() {
         printf("5. Low Stock Alerts\n");
         printf("6. Inventory Reporting (by ID or status)\n");
         printf("7. Update Product Status (live/discontinued)\n");
-        printf("0. Save and Exit\n");
+        printf("0. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         flushInput();
