@@ -3,6 +3,7 @@
 #include <string.h>
 #include "inventory.h"
 
+
 Inventory stock[MAX];
 int stockCount = 0;
 
@@ -10,6 +11,50 @@ void flushInput() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
+
+int getProductDetails(const char* id, char* nameOut, float* priceOut) {
+    FILE* f = fopen("products.txt", "r");
+    if (!f) {
+        printf("Error opening products.txt\n");
+        return 0;
+    }
+
+    char pid[10], pname[50], categoryId[10];
+    float price;
+
+    while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
+        if (strcmp(pid, id) == 0) {
+            strcpy(nameOut, pname);
+            *priceOut = price;
+            fclose(f);
+            return 1;
+        }
+    }
+
+    fclose(f);
+    return 0;
+}
+int isProductExists(const char* id) {
+    FILE* f = fopen("products.txt", "r");
+    if (!f) {
+        printf("DEBUG: Could not open products.txt\n");
+        return 0;
+    }
+
+    char pid[10], pname[50], categoryId[10];
+    float price;
+
+    while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
+        if (strcmp(pid, id) == 0) {
+            fclose(f);
+            return 1;
+        }
+    }
+
+    fclose(f);
+    return 0;
+}
+
 void displayAvailableProducts() {
     FILE* f = fopen("products.txt", "r");
     if (!f) {
@@ -20,7 +65,7 @@ void displayAvailableProducts() {
     char pid[10], pname[50], categoryId[10];
     float price;
 
-    printf("\n Available Products:\n");
+    printf("\n\U0001F4E6 Available Products:\n");
     printf("-----------------------------\n");
     while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
         printf("ID: %s | Name: %s | Price: %.2f | Category: %s\n", pid, pname, price, categoryId);
@@ -28,43 +73,18 @@ void displayAvailableProducts() {
     fclose(f);
 }
 
-int isProductExists(const char* id) {
-    FILE* f = fopen("products.txt", "r");  
+void saveInventory() {
+    FILE* f = fopen("inventory.txt", "w");
     if (!f) {
-        printf("DEBUG: Could not open products.txt\n");
-        displayAvailableProducts(); 
-        return 0;
+        printf("Error saving inventory to file.\n");
+        return;
     }
-
-    char pid[10], name[50], categoryId[10];
-    float price;
-
-    while (fscanf(f, "%s %s %f %s", pid, name, &price, categoryId) == 4) {
-    if (strcmp(pid, id) == 0) {
-        fclose(f);
-        return 1;
-    }
-}
-    fclose(f);
-    return 0;
-}
-
-int getProductDetails(const char* id, char* nameOut, float* priceOut) {
-    FILE* f = fopen("products.txt", "r");
-    if (!f) return 0;
-
-    char pid[10], pname[50], categoryId[10];
-    float price;
-    while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
-        if (strcmp(pid, id) == 0) {
-            strcpy(nameOut, pname);
-            *priceOut = price;
-            fclose(f);
-            return 1;
-        }
+    for (int i = 0; i < stockCount; i++) {
+        fprintf(f, "%s %s %d %d %s\n", stock[i].productId, stock[i].productName,
+                stock[i].quantity, stock[i].threshold, stock[i].status);
     }
     fclose(f);
-    return 0;
+    printf("Inventory saved successfully.\n");
 }
 
 void addstock() {
@@ -78,14 +98,15 @@ void addstock() {
     printf("Enter product ID: ");
     fgets(newItem.productId, sizeof(newItem.productId), stdin);
     newItem.productId[strcspn(newItem.productId, "\n")] = 0;
-    
+
     if (strlen(newItem.productId) < 4 || newItem.productId[0] != 'P') {
         printf(" Invalid product ID format. Use something like P001.\n");
         return;
     }
-    
+
     if (!isProductExists(newItem.productId)) {
-        printf("Product ID not found in product list.\n");
+        printf(" Product ID not found in product list.\n");
+        displayAvailableProducts();
         return;
     }
 
@@ -95,7 +116,7 @@ void addstock() {
         printf("Product details could not be retrieved.\n");
         return;
     }
-    strcpy(newItem.productName, pname); 
+    strcpy(newItem.productName, pname);
 
     printf("Enter quantity: ");
     if (scanf("%d", &newItem.quantity) != 1 || newItem.quantity < 0) {
@@ -115,6 +136,7 @@ void addstock() {
     strcpy(newItem.status, "live");
     stock[stockCount++] = newItem;
     printf("Stock added successfully for %s.\n", newItem.productName);
+    saveInventory(); 
 }
 
 void updatestock() {
@@ -136,7 +158,7 @@ void updatestock() {
             }
             stock[i].threshold = newThreshold;
             printf("Threshold updated successfully.\n");
-            flushInput();
+            saveInventory();
             return;
         }
     }
@@ -144,32 +166,23 @@ void updatestock() {
 }
 
 void updatestatus() {
-    viewstock();
     char id[10];
-    char newStatus[15];
-    printf("\nEnter product ID to update status: ");
-    scanf("%9s", id);
-    flushInput();
+    printf("Enter product ID to update status: ");
+    scanf("%s", id);
 
     for (int i = 0; i < stockCount; i++) {
         if (strcmp(stock[i].productId, id) == 0) {
             printf("Current status: %s\n", stock[i].status);
             printf("Enter new status (live/discontinued): ");
-            fgets(newStatus, sizeof(newStatus), stdin);
-            newStatus[strcspn(newStatus, "\n")] = 0;
-
-            if (strcmp(newStatus, "live") != 0 && strcmp(newStatus, "discontinued") != 0) {
-                printf("Invalid status. Use 'live' or 'discontinued'.\n");
-                return;
-            }
-
-            strcpy(stock[i].status, newStatus);
-            printf("Status updated successfully.\n");
+            scanf("%s", stock[i].status);
+            printf("Status updated.\n");
+            saveInventory();
             return;
         }
     }
     printf("Product ID not found.\n");
 }
+
 
 void removestock() {
     for (int i = 0; i < stockCount; i++) {
@@ -178,6 +191,7 @@ void removestock() {
         }
     }
     printf("All discontinued items marked successfully.\n");
+    saveInventory();
 }
 
 void viewstock() {
@@ -235,20 +249,6 @@ void reportInventory() {
     }
 }
 
-void saveInventory() {
-    FILE* f = fopen("inventory.txt", "w");
-    if (!f) {
-        printf("Failed to open inventory file for saving.\n");
-        return;
-    }
-    for (int i = 0; i < stockCount; i++) {
-        fprintf(f, "%s %s %d %d %s\n",
-                stock[i].productId, stock[i].productName,
-                stock[i].quantity, stock[i].threshold, stock[i].status);
-    }
-    fclose(f);
-    printf("Inventory successfully saved.\n");
-}
 
 void loadInventory() {
     FILE* f = fopen("inventory.txt", "r");
