@@ -3,15 +3,18 @@
 #include <string.h>
 #include "inventory.h"
 
-
+// Define the inventory array and count
 Inventory stock[MAX];
 int stockCount = 0;
 
+
+// This is used to clear any unwanted characters from the input buffer
 void flushInput() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+// Retrieve the name and price of a product from products.txt
 int getProductDetails(const char* id, char* nameOut, float* priceOut) {
     FILE* f = fopen("products.txt", "r");
     if (!f) {
@@ -34,6 +37,7 @@ int getProductDetails(const char* id, char* nameOut, float* priceOut) {
     fclose(f);
     return 0;
 }
+// Check if a product exists in products.txt by its ID
 int isProductExists(const char* id) {
     FILE* f = fopen("products.txt", "r");
     if (!f) {
@@ -54,7 +58,7 @@ int isProductExists(const char* id) {
     fclose(f);
     return 0;
 }
-
+// Display all available products from products.txt
 void displayAvailableProducts() {
     FILE* f = fopen("products.txt", "r");
     if (!f) {
@@ -72,7 +76,7 @@ void displayAvailableProducts() {
     }
     fclose(f);
 }
-
+// Save the current inventory to inventory.txt
 void saveInventory() {
     FILE* f = fopen("inventory.txt", "w");
     if (!f) {
@@ -86,7 +90,7 @@ void saveInventory() {
     fclose(f);
     printf("Inventory saved successfully.\n");
 }
-
+// Add a new stock item to the inventory after validation
 void addstock() {
     if (stockCount >= MAX) {
         printf("Stock storage is full.\n");
@@ -138,7 +142,7 @@ void addstock() {
     printf("Stock added successfully for %s.\n", newItem.productName);
     saveInventory(); 
 }
-
+// Update the threshold for a specific product in the inventory
 void updatestock() {
     viewstock();
     char id[10];
@@ -165,6 +169,7 @@ void updatestock() {
     printf("Product ID not found.\n");
 }
 
+// Manually update the status of a product in the inventory
 void updatestatus() {
     char id[10];
     printf("Enter product ID to update status: ");
@@ -183,7 +188,7 @@ void updatestatus() {
     printf("Product ID not found.\n");
 }
 
-
+// Remove discontinued stock items based on their status and quantity automatically
 void removestock() {
     for (int i = 0; i < stockCount; i++) {
         if (strcmp(stock[i].status, "live") == 0 && stock[i].quantity == 0) {
@@ -193,7 +198,7 @@ void removestock() {
     printf("All discontinued items marked successfully.\n");
     saveInventory();
 }
-
+// View the current inventory levels and status of all products
 void viewstock() {
     printf("\nCurrent Inventory:\n");
     for (int i = 0; i < stockCount; i++) {
@@ -202,7 +207,7 @@ void viewstock() {
                stock[i].quantity, stock[i].threshold, stock[i].status);
     }
 }
-
+// Alert for low stock items based on their threshold
 void lowstockAlert() {
     printf("\nLow Stock Alerts:\n");
     for (int i = 0; i < stockCount; i++) {
@@ -212,7 +217,7 @@ void lowstockAlert() {
         }
     }
 }
-
+// Generate a report of the inventory based on product ID or status
 void reportInventory() {
     int option;
     char input[50];
@@ -249,7 +254,7 @@ void reportInventory() {
     }
 }
 
-
+// Load the inventory from inventory.txt
 void loadInventory() {
     FILE* f = fopen("inventory.txt", "r");
     if (!f) {
@@ -268,7 +273,7 @@ void loadInventory() {
     }
     fclose(f);
 }
-
+// Main menu for inventory management
 void inventoryMenu() {
     loadInventory();
     int choice;

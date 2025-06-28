@@ -3,6 +3,7 @@
 
 #define MAX 100
 
+// Inventory item structure
 typedef struct InventoryItem {
     char productId[10];
     char productName[50];
@@ -11,8 +12,11 @@ typedef struct InventoryItem {
     char status[10];
 } Inventory;
 
+// Global variables
 extern Inventory stock[MAX];
 extern int stockCount;
+
+// Function prototypes
 void displayAvailableProducts();
 void flushInput();
 void addstock();
@@ -25,6 +29,9 @@ void reportInventory();
 void saveInventory();
 void loadInventory();
 void inventoryMenu();
+
+// Product management functions
 int isProductExists(const char* id);
 int getProductDetails(const char* id, char* nameOut, float* priceOut);
+
 #endif
