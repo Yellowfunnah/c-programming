@@ -11,6 +11,7 @@ int userCount = 0;
 // User functions
 // Adds a new user by prompting for user ID and username, then stores it in the users array if the maximum limit hasn't been reached.
 void addUser() {
+    loadUserData();
     if (userCount >= MAX_TRANSACTIONS) {
         printf("User limit reached.\n");
         return;
@@ -71,6 +72,7 @@ void updateUser() {
 
 // Deletes a user from the users array by matching the entered User ID, shifts remaining users to fill the gap, and updates the user count; displays a message if the user is not found.
 void deleteUser() {
+    loadUserData();
     char id[10];
     int found = 0;
     printf("Enter User ID to delete: ");
@@ -93,6 +95,7 @@ void deleteUser() {
 // Transaction functions
 // Records a new transaction by prompting for transaction details, updates inventory and stores transaction if valid.
 void addTransaction() {
+    loadTransactionData();
     if (transactionCount >= MAX_TRANSACTIONS) {
         printf("Transaction limit reached.\n");
         return;
@@ -207,6 +210,7 @@ void viewTransactions() {
 
 // Deletes a transaction by matching the entered Transaction ID
 void deleteTransaction() {
+    loadTransactionData();
     char id[10];
     int found = 0;
     printf("Enter Transaction ID to delete: ");

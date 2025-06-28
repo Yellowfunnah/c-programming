@@ -47,7 +47,7 @@ int main() {
         printf("4. User and Transaction Management\n");
         printf("5. File Operations and Advanced Features\n");
         printf("6. Terminate\n");
-        printf("Select a role to log into (1-5): ");
+        printf("Select a role to log into (1-6): ");
         scanf("%d", &choice);
 
         if (choice >= 1 && choice <= 5) {
