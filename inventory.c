@@ -10,10 +10,30 @@ void flushInput() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
+void displayAvailableProducts() {
+    FILE* f = fopen("products.txt", "r");
+    if (!f) {
+        printf("Unable to open products.txt\n");
+        return;
+    }
+
+    char pid[10], pname[50], categoryId[10];
+    float price;
+
+    printf("\n Available Products:\n");
+    printf("-----------------------------\n");
+    while (fscanf(f, "%s %s %f %s", pid, pname, &price, categoryId) == 4) {
+        printf("ID: %s | Name: %s | Price: %.2f | Category: %s\n", pid, pname, price, categoryId);
+    }
+    fclose(f);
+}
 
 int isProductExists(const char* id) {
-    FILE* f = fopen("products.txt", "r");
-    if (!f) return 0;
+    FILE* f = fopen("products.txt", "r");  
+    if (!f) {
+        printf("DEBUG: Could not open products.txt\n");
+        return 0;
+    }
 
     char pid[10], name[50], categoryId[10];
     float price;
