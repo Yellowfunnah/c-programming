@@ -1,0 +1,5 @@
+admin,admin123,1
+stockman,stock123,2
+supplier,supp123,3
+cashier,cash123,4
+fileboss,file123,5
