@@ -134,7 +134,7 @@ void view_products() {
 
 // Loop through file records to find a match or display data
     while (fscanf(fp, "%s %s %lf %s", view.productID, view.product_name, &view.price, view.categoryId) != EOF) {
-        printf("%-10s %-25s RM%-9.2lf %-10s\n", view.productID, view.product_name, view.price, view.categoryId);
+        printf("%-10s %-22.22s RM%-8.2lf %-10s\n", view.productID, view.product_name, view.price, view.categoryId);
     }
     fclose(fp);
 }
