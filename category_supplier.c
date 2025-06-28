@@ -18,6 +18,7 @@ void addCategory() {
     scanf("%s", categories[catCount].categoryName);
     catCount++;
     printf("The category was successfully added!\n");
+    saveData();
 }
 
 void updateCategory() {
@@ -31,6 +32,7 @@ void updateCategory() {
             scanf("%s", categories[i].categoryName);
             printf("The category has been successfully updated!\n");
             found = 1;
+            saveData();
             break;
         }
     }
@@ -50,6 +52,7 @@ void deleteCategory() {
             catCount--;
             printf("The category was deleted successfully!\n");
             found = 1;
+            saveData();
             break;
         }
     }
@@ -76,6 +79,7 @@ void addSupplier() {
     scanf("%s", suppliers[suppCount].categoryId);
     suppCount++;
     printf("Supplier added successfully.\n");
+    saveData();
 }
 
 void updateSupplier() {
@@ -91,6 +95,7 @@ void updateSupplier() {
             scanf("%s", suppliers[i].categoryId);
             printf("The supplier has been successfully updated!\n");
             found = 1;
+            saveData();
             break;
         }
     }
@@ -110,6 +115,7 @@ void deleteSupplier() {
             suppCount--;
             printf("Supplier deleted successfully.\n");
             found = 1;
+            saveData();
             break;
         }
     }
@@ -222,7 +228,7 @@ void loadData() {
         }
         fclose(cf);
     } else {
-        printf("❌ Failed to open categories.txt\n");
+        printf(" Failed to open categories.txt\n");
     }
 
     if (sf != NULL) {
@@ -234,10 +240,11 @@ void loadData() {
 
 
 void manageMenu() {
+    loadData();
     int choice;
     do {
         printf("\n== Category and Supplier Management =====\n");
-        printf("1. Add Category\n2. Add Supplier\n3. Update Category\n4. Update Supplier\n5. Delete Category\n6. Delete Supplier\n7. View Categories\n8. View Suppliers\n9. Filter Suppliers by Category\n10. Show Inventory from File\n11. Restock Inventory (Add Quantity)\n12. Save & Exit\nChoose option: ");
+        printf("1. Add Category\n2. Add Supplier\n3. Update Category\n4. Update Supplier\n5. Delete Category\n6. Delete Supplier\n7. View Categories\n8. View Suppliers\n9. Filter Suppliers by Category\n10. Show Inventory from File\n11. Restock Inventory (Add Quantity)\n12. Exit\nChoose option: ");
         scanf("%d", &choice);
         switch (choice) {
             case 1: addCategory(); break;
@@ -251,7 +258,7 @@ void manageMenu() {
             case 9: filterSuppliersByCategory(); break;
             case 10: displayInventoryFromFile(); break;
             case 11: restockInventory(); break;
-            case 12: saveData(); break;
+            case 12: printf("\nExiting...\n"); break;
             default: printf("Invalid choice, please try again!\n");
         }
     } while (choice != 12);
