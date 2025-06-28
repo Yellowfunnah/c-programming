@@ -1,208 +1,131 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "file.h" 
-#define PRODUCT_FILE "products.txt"
+#include "file.h"
+#include "product.h"
+#include "inventory.h"
+#include "category_supplier.h"
+#include "transaction.h"
 
-// ========== Linked List Functions ==========
+void addDataMenu() {
+    int choice;
+    printf("\n== ADD DATA MENU ==\n");
+    printf("1. Add Product\n");
+    printf("2. Add Stock\n");
+    printf("3. Add Category\n");
+    printf("4. Add Supplier\n");
+    printf("5. Add User\n");
+    printf("6. Add Transaction\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
 
-// Create a new product node
-Product* createProduct(int id, const char* name, int quantity, float price) {
-    Product* newProduct = (Product*)malloc(sizeof(Product));
-    newProduct->id = id;
-    strcpy(newProduct->name, name);
-    newProduct->quantity = quantity;
-    newProduct->price = price;
-    newProduct->next = NULL;
-    return newProduct;
-}
-
-// Free the entire list
-void freeProductList(Product* head) {
-    Product* temp;
-    while (head != NULL) {
-        temp = head;
-        head = head->next;
-        free(temp);
+    switch (choice) {
+        case 1: add_product(); break;
+        case 2: addstock(); break;
+        case 3: addCategory(); break;
+        case 4: addSupplier(); break;
+        case 5: addUser(); break;
+        case 6: addTransaction(); break;
+        default: printf("Invalid choice.\n");
     }
 }
 
-// ========== File Handling Functions ==========
+void updateDataMenu() {
+    int choice;
+    printf("\n== UPDATE DATA MENU ==\n");
+    printf("1. Update Product\n");
+    printf("2. Update Stock\n");
+    printf("3. Update Category\n");
+    printf("4. Update Supplier\n");
+    printf("5. Update User\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
 
-// Save a single product to the file
-void saveProductToFile(Product* p) {
-    FILE* file = fopen(PRODUCT_FILE, "a");
-    if (!file) {
-        printf("Error opening file for writing.\n");
-        return;
-    }
-    fprintf(file, "%d,%s,%d,%.2f\n", p->id, p->name, p->quantity, p->price);
-    fclose(file);
-}
-
-// Load all products from file into a linked list
-Product* loadProductsFromFile() {
-    FILE* file = fopen(PRODUCT_FILE, "r");
-    if (!file) {
-        printf("No products found yet.\n");
-        return NULL;
-    }
-
-    Product* head = NULL;
-    Product* tail = NULL;
-    while (!feof(file)) {
-        Product* p = (Product*)malloc(sizeof(Product));
-        if (fscanf(file, "%d,%49[^,],%d,%f\n", &p->id, p->name, &p->quantity, &p->price) == 4) {
-            p->next = NULL;
-            if (head == NULL) {
-                head = tail = p;
-            } else {
-                tail->next = p;
-                tail = p;
-            }
-        } else {
-            free(p);
-        }
-    }
-
-    fclose(file);
-    return head;
-}
-
-// Rewrite the whole file with the current list
-void writeAllProductsToFile(Product* head) {
-    FILE* file = fopen(PRODUCT_FILE, "w");
-    if (!file) {
-        printf("Error opening file for writing.\n");
-        return;
-    }
-
-    Product* current = head;
-    while (current != NULL) {
-        fprintf(file, "%d,%s,%d,%.2f\n", current->id, current->name, current->quantity, current->price);
-        current = current->next;
-    }
-
-    fclose(file);
-}
-
-// ========== CRUD Operations ==========
-
-// Display all products
-void displayAllProducts(Product* head) {
-    if (!head) {
-        printf("No products to display.\n");
-        return;
-    }
-
-    printf("\n=== Product List ===\n");
-    while (head != NULL) {
-        printf("ID: %d | Name: %s | Qty: %d | Price: RM%.2f\n",
-               head->id, head->name, head->quantity, head->price);
-        head = head->next;
+    switch (choice) {
+        case 1: update_product(); break;
+        case 2: updatestock(); break;
+        case 3: updateCategory(); break;
+        case 4: updateSupplier(); break;
+        case 5: updateUser(); break;
+        default: printf("Invalid choice.\n");
     }
 }
 
-// Update quantity of a product
-void updateProductQuantity(Product* head, int id, int newQty) {
-    Product* current = head;
-    while (current != NULL) {
-        if (current->id == id) {
-            current->quantity = newQty;
-            writeAllProductsToFile(head);
-            printf("Quantity updated for product ID %d.\n", id);
-            return;
-        }
-        current = current->next;
+void deleteDataMenu() {
+    int choice;
+    printf("\n== DELETE DATA MENU ==\n");
+    printf("1. Delete Product\n");
+    printf("2. Delete Stock\n");
+    printf("3. Delete Category\n");
+    printf("4. Delete Supplier\n");
+    printf("5. Delete User\n");
+    printf("6. Delete Transaction\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1: delete_product(); break;
+        case 2: removestock(); break;
+        case 3: deleteCategory(); break;
+        case 4: deleteSupplier(); break;
+        case 5: deleteUser(); break;
+        case 6: deleteTransaction(); break;
+        default: printf("Invalid choice.\n");
     }
-    printf("Product ID not found.\n");
 }
 
-// Delete a product by ID
-Product* deleteProductById(Product* head, int id) {
-    Product *current = head, *prev = NULL;
+void viewAllData() {
+    printf("\n===== ALL SYSTEM DATA =====\n");
 
-    while (current != NULL) {
-        if (current->id == id) {
-            if (prev == NULL)
-                head = current->next;
-            else
-                prev->next = current->next;
+    printf("\n--- Products ---\n");
+    view_products();
 
-            free(current);
-            writeAllProductsToFile(head);
-            printf("Product with ID %d deleted.\n", id);
-            return head;
-        }
-        prev = current;
-        current = current->next;
-    }
+    printf("\n--- Inventory ---\n");
+    loadInventory();
+    viewstock();
 
-    printf("Product ID not found.\n");
-    return head;
-} 
+    printf("\n--- Categories ---\n");
+    loadData();
+    displayCategories();
 
+    printf("\n--- Suppliers ---\n");
+    displaySuppliers();
 
-// ========== FILE OPERATIONS MENU (NOW OUTSIDE deleteProductById) ==========
+    printf("\n--- Users ---\n");
+    loadUserData();
+    viewUsers();
+
+    printf("\n--- Transactions ---\n");
+    loadTransactionData();
+    viewTransactions();
+
+    saveData();
+    saveInventory();
+    saveUserData();
+    saveTransactionData();
+
+    printf("\n All module data reloaded and saved.\n");
+}
+
 void fileOperationsMenu() {
-    Product* list = NULL;
     int choice;
 
     do {
-        printf("\n========== FILE OPERATIONS MENU ==========\n");
-        printf("1. Add New Product\n");
-        printf("2. View All Products\n");
-        printf("3. Update Product Quantity\n");
-        printf("4. Delete Product by ID\n");
-        printf("0. Back to Main Menu\n");
-        printf("Enter your choice: ");
+        printf("\n===== FILE OPERATIONS MENU (ROLE 5) =====\n");
+        printf("1. Add Data\n");
+        printf("2. Update Data\n");
+        printf("3. Delete Data\n");
+        printf("4. View All Data\n");
+        printf("0. Exit File Menu\n");
+        printf("Enter choice: ");
         scanf("%d", &choice);
 
-        if (choice == 1) {
-            int id, qty;
-            float price;
-            char name[50];
-
-            printf("Enter product ID: ");
-            scanf("%d", &id);
-            printf("Enter product name: ");
-            scanf(" %[^\n]", name); // Note: space before % to consume newline from previous scanf
-            printf("Enter quantity: ");
-            scanf("%d", &qty);
-            printf("Enter price: ");
-            scanf("%f", &price);
-
-            Product* newProduct = createProduct(id, name, qty, price);
-            saveProductToFile(newProduct);
-            free(newProduct); // Free the allocated product node
-            printf("Product added successfully.\n");
-
-        } else if (choice == 2) {
-            list = loadProductsFromFile();
-            displayAllProducts(list);
-            freeProductList(list); // Free the list after use
-            list = NULL; // Best practice: set to NULL after freeing
-        } else if (choice == 3) {
-            int id, newQty;
-            printf("Enter product ID to update: ");
-            scanf("%d", &id);
-            printf("Enter new quantity: ");
-            scanf("%d", &newQty);
-            list = loadProductsFromFile();
-            updateProductQuantity(list, id, newQty);
-            freeProductList(list);
-            list = NULL;
-        } else if (choice == 4) {
-            int id;
-            printf("Enter product ID to delete: ");
-            scanf("%d", &id);
-            list = loadProductsFromFile();
-            list = deleteProductById(list, id); // deleteProductById returns the new head
-            freeProductList(list); // Free the (potentially modified) list
-            list = NULL;
-        } else if (choice != 0) {
-            printf("Invalid choice.\n");
+        switch (choice) {
+            case 1: addDataMenu(); break;
+            case 2: updateDataMenu(); break;
+            case 3: deleteDataMenu(); break;
+            case 4: viewAllData(); break;
+            case 0: printf("Returning to main menu...\n"); break;
+            default: printf("Invalid choice.\n");
         }
-
     } while (choice != 0);
 }
