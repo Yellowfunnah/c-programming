@@ -190,12 +190,16 @@ void updatestatus() {
 
 // Remove discontinued stock items based on their status and quantity automatically
 void removestock() {
-    for (int i = 0; i < stockCount; i++) {
-        if (strcmp(stock[i].status, "live") == 0 && stock[i].quantity == 0) {
-            strcpy(stock[i].status, "discontinued");
+    int i, j = 0;
+
+    for (i = 0; i < stockCount; i++) {
+        if (strcmp(stock[i].status, "discontinued") != 0) {
+            stock[j++] = stock[i];  // Keep the item
         }
     }
-    printf("All discontinued items marked successfully.\n");
+
+    stockCount = j;  // Update to new count after deletion
+    printf("All discontinued items removed successfully.\n");
     saveInventory();
 }
 // View the current inventory levels and status of all products
