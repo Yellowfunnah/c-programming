@@ -26,6 +26,6 @@ void updateProductQuantity(Product* head, int id, int newQty);
 Product* deleteProductById(Product* head, int id);
 
 // ===== Menu =====
-void fileOperationsMenu();  // So main.c can call your file menu
+void fileOperationsMenu();  // So meh.c can call your file menu
 
 #endif
