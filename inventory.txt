@@ -1,4 +1,4 @@
-P001 Apple 100 50 live
+P001 Apple 99 50 live
 P002 Banana 100 50 live
 P003 Mango 100 50 live
 P004 Orange 100 50 live
@@ -32,20 +32,11 @@ P031 White_Bread 100 50 live
 P032 Croissant 100 50 live
 P033 Donut 100 50 live
 P034 Muffin 100 50 live
-P035 Bagel 100 50 live 
+P035 Bagel 100 50 live
 P036 Dish_Soap 100 50 live
-P037 Laundry_Detergent 100 50 live 
+P037 Laundry_Detergent 100 50 live
 P038 Glass_Cleaner 100 50 live
 P039 Bleach 100 50 live
-P040 All-Purpose_Spray 100 50 live 
+P040 All-Purpose_Spray 100 50 live
 P041 Shampoo 50 25 live
 P042 Toothpaste 100 50 live
-P043 Soap Bar 100 50 live
-P044 Lotion 100 50 live
-P045 Deodorant 100 50 live
-P046 Notebook 50 25 live
-P047 Pen 100 50 live
-P048 Pencil 100 50 live
-P049 Eraser 100 50 live
-P050 Highlighter 100 50 live
-P051 Sharpener 100 50 live
