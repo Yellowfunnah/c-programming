@@ -13,7 +13,7 @@ typedef struct InventoryItem {
 
 extern Inventory stock[MAX];
 extern int stockCount;
-
+void displayAvailableProducts();
 void flushInput();
 void addstock();
 void updatestock();

@@ -32,6 +32,7 @@ int isProductExists(const char* id) {
     FILE* f = fopen("products.txt", "r");  
     if (!f) {
         printf("DEBUG: Could not open products.txt\n");
+        displayAvailableProducts(); 
         return 0;
     }
 
@@ -77,7 +78,12 @@ void addstock() {
     printf("Enter product ID: ");
     fgets(newItem.productId, sizeof(newItem.productId), stdin);
     newItem.productId[strcspn(newItem.productId, "\n")] = 0;
-
+    
+    if (strlen(newItem.productId) < 4 || newItem.productId[0] != 'P') {
+        printf(" Invalid product ID format. Use something like P001.\n");
+        return;
+    }
+    
     if (!isProductExists(newItem.productId)) {
         printf("Product ID not found in product list.\n");
         return;
