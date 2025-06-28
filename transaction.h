@@ -20,7 +20,7 @@ typedef struct {
 } User;
 
 // Function declarations
-
+void flushInput();
 // User management
 void transactionMenu();
 void addUser();

@@ -9,10 +9,6 @@ int transactionCount = 0;
 int userCount = 0;
 
 // Utility
-void flushInput() {
-    int ch;
-    while ((ch = getchar()) != '\n' && ch != EOF);
-}
 
 // User functions
 void addUser() {
@@ -41,6 +37,7 @@ void viewUsers() {
 }
 
 void updateUser() {
+    viewUsers();
     loadUserData();  // Always reload
 
     if (userCount == 0) {
