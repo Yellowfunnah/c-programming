@@ -178,13 +178,22 @@ void updatestatus() {
     for (int i = 0; i < stockCount; i++) {
         if (strcmp(stock[i].productId, id) == 0) {
             printf("Current status: %s\n", stock[i].status);
+
+            // Flush leftover newline from previous input
+            flushInput();
+
             printf("Enter new status (live/discontinued): ");
-            scanf("%s", stock[i].status);
+            fgets(stock[i].status, sizeof(stock[i].status), stdin);
+
+            // Remove trailing newline
+            stock[i].status[strcspn(stock[i].status, "\n")] = 0;
+
             printf("Status updated.\n");
             saveInventory();
             return;
         }
     }
+
     printf("Product ID not found.\n");
 }
 

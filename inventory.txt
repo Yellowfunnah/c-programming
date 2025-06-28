@@ -43,6 +43,4 @@ P042 Toothpaste 100 50 live
 P043 Soap_Bar 100 50 live
 P044 Lotion 100 50 live
 P045 Deodorant 100 50 live
-P046 Notebook 100 100 live
-P047 Pen 50 25 live
-P048 Pencil 60 30 live
+P046 Notebook 100 120 live
