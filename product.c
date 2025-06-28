@@ -12,11 +12,13 @@ int isValidName(const char* name) {
     }
     return 1;
 }
-
+// Adds a new product to the products.txt file after validation
 void add_product() {
     FILE *fp;
     product new_product;
 
+
+// Open product file in append mode to add new data
     fp = fopen(FILENAME, "a");
     if (fp == NULL) {
         printf("Oops! Error opening file!\n");
@@ -30,8 +32,12 @@ void add_product() {
     scanf("%s", new_product.productID);
     while (getchar() != '\n');
 
+
+// Open product file in read mode to check existing records
     FILE *check_fp = fopen(FILENAME, "r");
     product temp;
+
+// Loop through file records to find a match or display data
     while (fscanf(check_fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
         if (strcmp(temp.productID, new_product.productID) == 0) {
             printf("Product ID already exists! Please enter a unique ID.\n");
@@ -44,8 +50,17 @@ void add_product() {
 
     // Product name input
     printf("Enter Product Name: ");
+
+// Get product name (with spaces) and remove newline character
     fgets(new_product.product_name, MAX_NAME_LENGTH, stdin);
     new_product.product_name[strcspn(new_product.product_name, "\n")] = 0;
+
+    
+    for (int i = 0; new_product.product_name[i] != '\0'; i++) {
+        if (new_product.product_name[i] == ' ') {
+            new_product.product_name[i] = '_';
+        }
+    }
 
     if (!isValidName(new_product.product_name)) {
         printf("Invalid product name! Only letters and spaces allowed.\n");
@@ -56,6 +71,7 @@ void add_product() {
     // Price input
     printf("Enter Price: ");
     scanf("%lf", &new_product.price);
+    // Read price and validate it's within acceptable range
     while (getchar() != '\n');
     if (new_product.price <= 0 || new_product.price > 100000) {
         printf("Invalid price! Must be between 0.01 and 100000.\n");
@@ -66,6 +82,7 @@ void add_product() {
     // Category ID input + validation
     printf("Enter Category ID: ");
     scanf("%s", new_product.categoryId);
+// Open product file in read mode to check existing records
     FILE *cat_fp = fopen("categories.txt", "r");
     int catFound = 0;
     char catID[10], catName[50];
@@ -74,6 +91,7 @@ void add_product() {
         fclose(fp);
         return;
     }
+// Loop through file records to find a match or display data
     while (fscanf(cat_fp, "%s %s", catID, catName) != EOF) {
         if (strcmp(catID, new_product.categoryId) == 0) {
             catFound = 1;
@@ -98,10 +116,12 @@ void add_product() {
     printf("Product added successfully!\n");
 }
 
+// Displays all products currently in products.txt
 void view_products() {
     FILE *fp;
     product view;
 
+// Open product file in read mode to check existing records
     fp = fopen(FILENAME, "r");
     if (fp == NULL) {
         printf("Oops! The product can't be found.\n");
@@ -111,13 +131,19 @@ void view_products() {
     printf("~~~~ All The Products ~~~~\n");
     printf("%-10s %-25s %-10s %-10s\n", "ID", "Name", "Price", "Category");
     printf("\n");
+
+// Loop through file records to find a match or display data
     while (fscanf(fp, "%s %s %lf %s", view.productID, view.product_name, &view.price, view.categoryId) != EOF) {
         printf("%-10s %-25s RM%-9.2lf %-10s\n", view.productID, view.product_name, view.price, view.categoryId);
     }
     fclose(fp);
 }
 
+// Updates an existing product's details based on product ID
 void update_product() {
+    printf("\nCurrent product list:\n");
+    view_products();
+
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
     product temp;
@@ -129,13 +155,25 @@ void update_product() {
         return;
     }
 
+// Loop through file records to find a match or display data
     printf("Enter Product ID to Update: ");
     scanf("%s", target_id);
+    while (getchar() != '\n');
 
     while (fscanf(fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
         if (strcmp(temp.productID, target_id) == 0) {
             printf("Enter new name: ");
-            scanf("%s", temp.product_name);
+            fgets(temp.product_name, MAX_NAME_LENGTH, stdin);
+            temp.product_name[strcspn(temp.product_name, "\n")] = 0;
+
+            // Replace spaces with underscores
+            for (int i = 0; temp.product_name[i] != '\0'; i++) {
+                if (temp.product_name[i] == ' ') {
+                    temp.product_name[i] = '_';
+                }
+            }
+
+
             printf("Enter new price: ");
             scanf("%lf", &temp.price);
             printf("Enter new Category ID: ");
@@ -147,7 +185,11 @@ void update_product() {
     fclose(fp);
     fclose(temp_fp);
 
+
+// Delete original file after transferring data to temp file
     remove(FILENAME);
+
+// Rename temp file to original filename to finalize changes
     rename("temp.txt", FILENAME);
 
     if (found)
@@ -156,7 +198,13 @@ void update_product() {
         printf("Product ID not found.\n");
 }
 
+// Deletes a product from the products.txt file based on product ID
 void delete_product() {
+
+// Open product file in read mode to check existing records
+    printf("\nCurrent product list:\n");
+    view_products();
+
     FILE *fp = fopen(FILENAME, "r");
     FILE *temp_fp = fopen("temp.txt", "w");
     product temp;
@@ -171,6 +219,7 @@ void delete_product() {
     printf("Enter Product ID to delete: ");
     scanf("%s", target_id);
 
+// Loop through file records to find a match or display data
     while (fscanf(fp, "%s %s %lf %s", temp.productID, temp.product_name, &temp.price, temp.categoryId) != EOF) {
         if (strcmp(temp.productID, target_id) == 0) {
             found = 1;
@@ -180,7 +229,9 @@ void delete_product() {
     }
     fclose(fp);
     fclose(temp_fp);
+// Delete original file after transferring data to temp file
     remove(FILENAME);
+// Rename temp file to original filename to finalize changes
     rename("temp.txt", FILENAME);
 
     if (found)
@@ -189,6 +240,7 @@ void delete_product() {
         printf("Product ID not found.\n");
 }
 
+// Menu to manage product operations: Add, View, Update, Delete
 void productMenu() {
     int choice;
 

@@ -74,21 +74,76 @@ void addTransaction() {
         return;
     }
 
+    char productId[10];
+    int purchaseQty;
+    int found = 0;
+
     printf("Enter Transaction ID: ");
     scanf("%s", transactions[transactionCount].transactionID);
     printf("Enter User ID: ");
     scanf("%s", transactions[transactionCount].userID);
     printf("Enter Product ID: ");
-    scanf("%s", transactions[transactionCount].productID);
+    scanf("%s", productId);
     printf("Enter Quantity: ");
-    scanf("%d", &transactions[transactionCount].quantity);
-    printf("Enter Total Price: ");
-    scanf("%lf", &transactions[transactionCount].totalPrice);
+    scanf("%d", &purchaseQty);
     printf("Enter Date (DD-MM-YYYY): ");
     scanf("%s", transactions[transactionCount].date);
 
+    FILE *inv = fopen("inventory.txt", "r");
+    FILE *temp = fopen("temp_inventory.txt", "w");
+    if (!inv || !temp) {
+        printf("Error opening inventory file.\n");
+        return;
+    }
+
+    char pid[10], pname[50], status[10];
+    int qty, threshold;
+    double unitPrice = 0.0;
+
+    while (fscanf(inv, "%s %s %d %d %s", pid, pname, &qty, &threshold, status) == 5) {
+        if (strcmp(pid, productId) == 0) {
+            found = 1;
+            if (qty < purchaseQty) {
+                printf("Insufficient stock for %s. Available: %d\n", pname, qty);
+                fclose(inv);
+                fclose(temp);
+                remove("temp_inventory.txt");
+                return;
+            }
+            qty -= purchaseQty;
+
+            FILE *pf = fopen("products.txt", "r");
+            if (pf != NULL) {
+                char prodID[10], prodName[100], catID[10];
+                double price;
+                while (fscanf(pf, "%s %s %lf %s", prodID, prodName, &price, catID) != EOF) {
+                    if (strcmp(prodID, productId) == 0) {
+                        unitPrice = price;
+                        break;
+                    }
+                }
+                fclose(pf);
+            }
+        }
+        fprintf(temp, "%s %s %d %d %s\n", pid, pname, qty, threshold, status);
+    }
+
+    fclose(inv);
+    fclose(temp);
+    remove("inventory.txt");
+    rename("temp_inventory.txt", "inventory.txt");
+
+    if (!found) {
+        printf("Product ID not found in inventory.\n");
+        return;
+    }
+
+    strcpy(transactions[transactionCount].productID, productId);
+    transactions[transactionCount].quantity = purchaseQty;
+    transactions[transactionCount].totalPrice = purchaseQty * unitPrice;
+
     transactionCount++;
-    printf("Transaction recorded.\n");
+    printf("Transaction recorded. RM%.2lf deducted. Inventory updated.\n", purchaseQty * unitPrice);
 }
 
 void viewTransactions() {

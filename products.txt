@@ -8,7 +8,11 @@ P007 Broccoli 1.10 C002
 P008 Lettuce 0.90 C002
 P009 Tomato 1.00 C002
 P010 Cucumber 0.70 C002
+<<<<<<< HEAD
 P011 Mineral_Water 1.00 C003
+=======
+P011 Water 1.00 C003
+>>>>>>> 0c140566adeea7343e344207658137d12971f59e
 P012 Orange_Juice 2.00 C003
 P013 Cola 1.80 C003
 P014 Iced_Tea 2.20 C003
@@ -17,7 +21,11 @@ P016 Potato_Chips 2.50 C004
 P017 Chocolate_Bar 1.20 C004
 P018 Trail_Mix 3.00 C004
 P019 Popcorn 1.80 C004
+<<<<<<< HEAD
 P020 Granola Bar 2.00 C004
+=======
+P020 Granola_Bar 2.00 C004
+>>>>>>> 0c140566adeea7343e344207658137d12971f59e
 P021 Cheddar_Cheese 4.00 C005
 P022 Yogurt 1.50 C005
 P023 Butter 3.00 C005
@@ -40,12 +48,16 @@ P039 Bleach 2.80 C008
 P040 All-Purpose_Spray 3.00 C008
 P041 Shampoo 4.50 C009
 P042 Toothpaste 2.50 C009
-P043 Soap Bar 1.20 C009
+P043 Soap_Bar 1.20 C009
 P044 Lotion 3.50 C009
 P045 Deodorant 4.00 C009
 P046 Notebook 2.50 C010
 P047 Pen 0.80 C010
 P048 Pencil 0.50 C010
 P049 Eraser 0.30 C010
+<<<<<<< HEAD
 P050 Highlighter 1.20 C010
 P051 Sharpener 0.32 C010
+=======
+P050 Highlighter 1.20 C012
+>>>>>>> 0c140566adeea7343e344207658137d12971f59e

@@ -1,6 +1,6 @@
 //assignment file  :)
 #include <stdio.h>
-#include "inventory.h" //Inventory header file
+#include "inventory.h" 
 #include "product.h"
 #include "category_supplier.h"
 #include "transaction.h"  
@@ -19,7 +19,6 @@ void role2(){
     inventoryMenu();
  }
 
-
 //Role 3
 void role3(){
     loadData();        // ✅ This loads categories.txt and suppliers.txt
@@ -37,7 +36,7 @@ void role5(){
 }
 
 
-// THHEE MENUU :))))))
+// THE MENUU :)
 
 void RolesMenu(){
 
