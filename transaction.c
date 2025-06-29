@@ -8,10 +8,25 @@ User users[MAX_TRANSACTIONS];
 int transactionCount = 0;
 int userCount = 0;
 
+// Append a single transaction to the file
+void appendTransactionToFile(Transaction t) {
+    FILE *f = fopen("transactions.txt", "a");
+    if (f != NULL) {
+        fprintf(f, "%s %s %s %d %.2lf %s\n",
+                t.transactionID,
+                t.userID,
+                t.productID,
+                t.quantity,
+                t.totalPrice,
+                t.date);
+        fclose(f);
+    } else {
+        printf("Error opening transactions.txt for appending.\n");
+    }
+}
+
 // User functions
-// Adds a new user by prompting for user ID and username, then stores it in the users array if the maximum limit hasn't been reached.
 void addUser() {
-    loadUserData();
     if (userCount >= MAX_TRANSACTIONS) {
         printf("User limit reached.\n");
         return;
@@ -25,9 +40,8 @@ void addUser() {
     printf("User added successfully!\n");
 }
 
-// Loads user data from file and displays all registered users with their IDs and usernames if any exist.
 void viewUsers() {
-    loadUserData();  // Ensure list is loaded from file
+    loadUserData();
     if (userCount == 0) {
         printf("No users registered yet.\n");
         return;
@@ -38,7 +52,6 @@ void viewUsers() {
     }
 }
 
-// Searches for a user by ID, and if found, updates their username and saves the changes to the file; otherwise, displays a "User not found" message.
 void updateUser() {
     viewUsers();
     loadUserData();
@@ -70,9 +83,7 @@ void updateUser() {
     }
 }
 
-// Deletes a user from the users array by matching the entered User ID, shifts remaining users to fill the gap, and updates the user count; displays a message if the user is not found.
 void deleteUser() {
-    loadUserData();
     char id[10];
     int found = 0;
     printf("Enter User ID to delete: ");
@@ -91,11 +102,7 @@ void deleteUser() {
     }
     if (!found) printf("User ID not found.\n");
 }
-
-// Transaction functions
-// Records a new transaction by prompting for transaction details, updates inventory and stores transaction if valid.
 void addTransaction() {
-    loadTransactionData();
     if (transactionCount >= MAX_TRANSACTIONS) {
         printf("Transaction limit reached.\n");
         return;
@@ -105,16 +112,18 @@ void addTransaction() {
     int purchaseQty;
     int found = 0;
 
+    Transaction newTransaction;
+
     printf("Enter Transaction ID: ");
-    scanf("%s", transactions[transactionCount].transactionID);
+    scanf("%s", newTransaction.transactionID);
     printf("Enter User ID: ");
-    scanf("%s", transactions[transactionCount].userID);
+    scanf("%s", newTransaction.userID);
     printf("Enter Product ID: ");
     scanf("%s", productId);
     printf("Enter Quantity: ");
     scanf("%d", &purchaseQty);
     printf("Enter Date (DD-MM-YYYY): ");
-    scanf("%s", transactions[transactionCount].date);
+    scanf("%s", newTransaction.date);
 
     FILE *inv = fopen("inventory.txt", "r");
     FILE *temp = fopen("temp_inventory.txt", "w");
@@ -179,15 +188,16 @@ void addTransaction() {
     remove("inventory.txt");
     rename("temp_inventory.txt", "inventory.txt");
 
-    strcpy(transactions[transactionCount].productID, productId);
-    transactions[transactionCount].quantity = purchaseQty;
-    transactions[transactionCount].totalPrice = purchaseQty * unitPrice;
+    // Save to memory
+    strcpy(newTransaction.productID, productId);
+    newTransaction.quantity = purchaseQty;
+    newTransaction.totalPrice = purchaseQty * unitPrice;
 
-    transactionCount++;
-    saveTransactionData();
+    transactions[transactionCount++] = newTransaction;  // Store in memory
+    appendTransactionToFile(newTransaction);            // Append only the new one
 
     printf("Transaction recorded successfully!\n");
-    printf("Total Price: RM%.2lf | Inventory updated for product %s.\n", purchaseQty * unitPrice, productId);
+    printf("Total Price: RM%.2lf | Inventory updated for product %s.\n", newTransaction.totalPrice, productId);
 }
 
 // Displays all recorded transactions
@@ -314,7 +324,9 @@ void saveTransactionData() {
     fclose(f);
 }
 
+
 void loadTransactionData() {
+    transactionCount = 0;  
     FILE *f = fopen("transactions.txt", "r");
     if (f != NULL) {
         while (fscanf(f, "%s %s %s %d %lf %s",
@@ -328,6 +340,7 @@ void loadTransactionData() {
         fclose(f);
     }
 }
+
 
 // Main menu
 void transactionMenu() {
