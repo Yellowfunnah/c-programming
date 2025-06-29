@@ -7,6 +7,7 @@ Category categories[MAX];
 Supplier suppliers[MAX];
 int catCount = 0, suppCount = 0;
 
+// Adds a new category to the system
 void addCategory() {
     if (catCount >= MAX) {
         printf("Category limit has been reached.\n");
@@ -21,6 +22,7 @@ void addCategory() {
     saveData();
 }
 
+// Updates the name of an existing category
 void updateCategory() {
     char id[10];
     int found = 0;
@@ -39,6 +41,7 @@ void updateCategory() {
     if (!found) printf("The category ID does not match!\n");
 }
 
+// Deletes a category from the system
 void deleteCategory() {
     char id[10];
     int found = 0;
@@ -59,6 +62,7 @@ void deleteCategory() {
     if (!found) printf("Category not found.\n");
 }
 
+// Displays all existing categories
 void displayCategories() {
     printf("\nThe Categories:\n");
     for (int i = 0; i < catCount; i++) {
@@ -66,6 +70,7 @@ void displayCategories() {
     }
 }
 
+// Adds a new supplier with category reference
 void addSupplier() {
     if (suppCount >= MAX) {
         printf("The limit for suppliers has been reached!\n");
@@ -82,6 +87,7 @@ void addSupplier() {
     saveData();
 }
 
+// Updates supplier information and category
 void updateSupplier() {
     char id[10];
     int found = 0;
@@ -102,6 +108,7 @@ void updateSupplier() {
     if (!found) printf("Supplier ID not found!\n");
 }
 
+// Deletes a supplier from the list
 void deleteSupplier() {
     char id[10];
     int found = 0;
@@ -122,6 +129,7 @@ void deleteSupplier() {
     if (!found) printf("Invalid supplier ID!\n");
 }
 
+// Displays all supplier details
 void displaySuppliers() {
     printf("Total suppliers:\n");
     for (int i = 0; i < suppCount; i++) {
@@ -129,6 +137,7 @@ void displaySuppliers() {
     }
 }
 
+// Shows suppliers that belong to a specific category
 void filterSuppliersByCategory() {
     char catId[10];
     printf("Enter category ID to filter suppliers: ");
@@ -141,6 +150,7 @@ void filterSuppliersByCategory() {
     }
 }
 
+// Reads and displays product inventory from a file
 void displayInventoryFromFile() {
     FILE *file = fopen("inventory.txt", "r");
     if (file == NULL) {
@@ -161,6 +171,7 @@ void displayInventoryFromFile() {
     fclose(file);
 }
 
+// Allows restocking an existing product in the inventory file
 void restockInventory() {
     displayInventoryFromFile();
 
@@ -204,6 +215,7 @@ void restockInventory() {
         printf(" Product ID not found in inventory.\n");
 }
 
+// Saves categories and suppliers to their respective text files
 void saveData() {
     FILE *cf = fopen("categories.txt", "w");
     FILE *sf = fopen("suppliers.txt", "w");
@@ -215,6 +227,7 @@ void saveData() {
     fclose(sf);
 }
 
+// Loads category and supplier data from files at program start
 void loadData() {
     FILE *cf = fopen("categories.txt", "r");
     FILE *sf = fopen("suppliers.txt", "r");
@@ -238,7 +251,7 @@ void loadData() {
     }
 }
 
-
+// Main menu for managing categories, suppliers, and inventory
 void manageMenu() {
     loadData();
     int choice;
